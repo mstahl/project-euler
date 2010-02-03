@@ -1,0 +1,6 @@
+Project Euler Solutions in Haskell and/or Ruby
+(c) 2010 max thom stahl
+
+I used Project Euler (http://projecteuler.net/) to learn Haskell and hone my Ruby skills, but found some of the problems extremely difficult. I'm putting these on Github to help others who might be having trouble out. Please do not simply copy my code and run it to get the answer, because that defeats the entire purpose. Read through them if you're really stuck and or have thought up a solution but are having trouble imagining that solution in Haskell.
+
+I don't say these are the best solutions. If you think yours are better, feel free to fork this and add your own.
