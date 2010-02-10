@@ -37,19 +37,34 @@ mergeAll (xxs@(x:xs) : yys@(y:ys) : zs)
     | x < y = x : mergeAll (xs : yys : zs)
     | otherwise = mergeAll ((xxs # yys) : zs)
 
-triple :: Integral t => t -> t -> (t, t, t)
-triple m n = (2 * m * n, (m ^ 2) - (n ^ 2), (m ^ 2) + (n ^ 2))
+coprime n m = n `gcd` m == 1
 
-triples :: Integral t => [(t, t, t)]
-triples = let triples' m = [triple m n | n <- [1..(m - 1)]]
-          in concat $ map (triples') [2..1000]
+triple :: Integral t => t -> t -> (t, t, t)
+-- triple u v = let g = u ^ 2
+--                  h = 2 * (v ^ 2)
+--                  i = 2 * u * v
+--              in (g + i, h + i, g + h + i)
+triple m n = ((m ^ 2) - (n ^ 2), 2 * m * n, (m ^ 2) + (n ^ 2))
+
+primitive_triples :: Integral t => [t]
+-- primitive_triples = mergeAll [[perimeter (triple u v) | v <- [1..], v `coprime` u] | u <- [1,3..]]
+-- primitive_triples = mergeAll [[perimeter (triple u v) | v <- [1..]] | u <- [1..]]
+-- primitive_triples = mergeAll [[perimeter (triple m n) | n <- [1..(m - 1)]] | m <- [2..2500]]
+primitive_triples = concat [[perimeter (triple m n) | n <- [1..(m - 1)]] | m <- [2..1414]]
+
+multiples :: Integral t => t -> [t] -> [t]
+multiples n (x:xs) = n * x : multiples n xs
+multiples _ _ = []
+
+all_triples :: Integral t => [t]
+all_triples = sort $ concat $ [takeWhile (<1500000) $ multiples p [1..] | p <- primitive_triples]
 
 perimeter :: Integral t => (t, t, t) -> t
 perimeter (a, b, c) = a + b + c
 
 uniques :: Integral t => [t] -> [t]
 uniques = map (head) . filter (\l -> length l == 1)
-                     . group . sort
+                     . group
 
 main :: IO ()
-main = do print $ length $ uniques $ filter (<1500000) $ map (perimeter) triples
+main = do print $ length $ uniques $ takeWhile (<1500000) $ all_triples
