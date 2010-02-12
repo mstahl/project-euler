@@ -14,16 +14,11 @@
 module Main where
 
 import Data.List
-
 import ONeillPrimes
 
--- This is my implementation of Dijkstra's algorithm for
--- generating Hamming numbers, from his notes linked to
--- from the wikipedia article. It's nearly verbatim the
--- same as his handwritten notes. Implementing a more
--- succinct way of doing the merges on x would be very
--- nice here, so that a more general function (with an
--- argument for type).
+-- (#) is a merge function. It takes two nondecreasing lists
+-- and returns a nondecreasing list containing all the elements
+-- of both lists
 (#) :: (Ord a) => [a] -> [a] -> [a]
 [] # ys = ys
 xs # [] = xs
@@ -31,17 +26,10 @@ xs@(x:xt) # ys@(y:yt) | x < y = x : (xt # ys)
                       | x > y = y : (xs # yt)
                       | otherwise = x : (xt # yt)
 
-mergeAll :: (Ord a) => [[a]] -> [a]
-mergeAll ([] : zs) = mergeAll zs
-mergeAll (xxs@(x:xs) : yys@(y:ys) : zs)
-    | x < y = x : mergeAll (xs : yys : zs)
-    | otherwise = mergeAll ((xxs # yys) : zs)
-
 times :: (Integral a) => a -> [a] -> [a]
 times n (a:b) = n * a : times n b
 
 hammings :: Integral t => [t]
--- hammings = 1 : foldl1 (#) [times r hammings | r <- takeWhile (<100) primes]
 hammings = 1 : foldl1 (#) [times r hammings | r <- takeWhile (<100) primes]
 
 main :: IO ()
