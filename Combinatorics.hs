@@ -16,6 +16,8 @@ combinationsOf k (x:xs) = map (x:) (combinationsOf (k-1) xs) ++ combinationsOf k
 
 combinations k n = combinationsOf k [1..n]
 
+n `choose` k = length $ combinations k n
+
 
 permutations n = permutationsOf [1..n]
 
