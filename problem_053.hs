@@ -17,10 +17,19 @@
 
 module Main where
 
-import Combinatorics
+factorial :: Integral t => t -> t
+factorial n | n > 1 = n * factorial (n - 1)
+            | otherwise = 1
 
--- c :: [Integer]
-c = concat [[n `choose` k | k <- [0..n]] | n <- [1..100]]
+choose :: Integral t => t -> t -> t
+choose n k = (factorial n) `div` ((factorial k) * (factorial (n - k)))
+
+c :: [Integer]
+c = [combs | n <- [1..100]
+           , k <- [1..(n - 1)]
+           , let combs = n `choose` k
+           , combs > 1000000
+           ]
 
 main :: IO ()
-main = do print $ length $ filter (>1000000) c
+main = do print $ length c
