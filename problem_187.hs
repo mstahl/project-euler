@@ -13,12 +13,13 @@ module Main where
 
 import Squarefrees  ((#), mergeAll)
 import ONeillPrimes
+import Data.List (nub)
 
--- squares = map (^2) primes
+limit = 200000
 
-semiprimes :: Integral t => [t]
-semiprimes = mergeAll [[p * q | p <- ps] | q <- ps]
-             where ps = primesToLimit 1000000
+myprimes = primesToLimit (limit `div` 2)
+
+semiprimes = mergeAll [[p * q | q <- myprimes] | p <- primes]
 
 main :: IO ()
-main = do print $ length $ takeWhile (<1000000) semiprimes
+main = do print $ length $ takeWhile (<limit) semiprimes
