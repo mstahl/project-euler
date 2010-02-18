@@ -10,17 +10,19 @@ module Main where
 
 import ONeillPrimes
 
-test :: [Integer] -> Bool
-test l = 
-  let all_equal l = and $ zipWith (==) l (tail l)
-      convert [a,b,c,d,e,f] = [a - 1, b - 3, c - 7, d - 9, e - 13, f - 27]
-      perfect_square x = x' * x' == x where x' = floor . sqrt . fromIntegral $ x
-      l' = convert l
-  in all_equal l' && all (perfect_square) l'
+perfect_square n = m * m == n where m = floor . sqrt . fromIntegral $ n
 
-ns :: [Integer]
-ns = 
-  let ns' (a:b:c:d:e:f:fs) | test [a, b, c, d, e, f] = (floor . sqrt . fromIntegral $ a - 1) : ns' (b:c:d:e:f:fs)
-                           | otherwise = ns' (b:c:d:e:f:fs)
-  in ns' primes
+differences (a, b, c, d, e, f) = and [ a - 1 == b - 3
+                                     , b - 3 == c - 7
+                                     , c - 7 == d - 9
+                                     , d - 9 == e - 13
+                                     , e - 13 == f - 27
+                                     ]
 
+test (a:b:c:d:e:f:fs) | (perfect_square (a - 1)) && (differences (a, b, c, d, e, f)) = a : test (b:c:d:e:f:fs)
+                      | otherwise = test (b:c:d:e:f:fs)
+
+-- candidates = [(floor . sqrt . fromIntegral) (n - 1) | n <- test primes]
+candidates = map (floor . sqrt . fromIntegral . ((flip (-))1)) $ test primes
+
+main = do print $ take 2 $ candidates
