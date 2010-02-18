@@ -10,13 +10,12 @@
 
 module Main where
 
-import qualified Data.Set as Set
 import ONeillPrimes
 import MillerRabin (powMod)
 
-q = 10 ^ 9
+digits = 10 ^ 9
 
 main = do print $ sum 
                 $ take 40 
-                $ filter (\x -> (powMod x 10 q) == 1) 
-                $ dropWhile (<7) primes
+                $ filter (\x -> (powMod x 10 digits) == 1) 
+                $ drop 3 primes
