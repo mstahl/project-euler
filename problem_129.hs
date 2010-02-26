@@ -22,5 +22,5 @@ a :: Integral t => t -> t
 a n = head $ filter (\k -> r_divisible_by k n) [1..]
 
 main :: IO ()
-main = do let ns = [k | k <- [3..], k `gcd` 10 == 1]
+main = do let ns = [k | k <- [11..], k `gcd` 10 == 1]
           print $ head $ dropWhile (\n -> a n < 1000000) ns
