@@ -43,6 +43,8 @@ undigits [] = 0
 lychrel_next :: Integral t => t -> t
 lychrel_next l = l + (undigits $ reverse $ digits l)
 
-is_lychrel n = any (palindrome) $ take 50 $ lychrels (lychrel_next n)
+is_lychrel n = not $ any (palindrome) $ take 50 $ lychrels (lychrel_next n)
 
-main = print $ length $ filter (is_lychrel) [1..10000]
+main :: IO ()
+main = print $ length $ filter (is_lychrel) [1..9999]
+

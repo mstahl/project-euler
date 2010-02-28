@@ -21,7 +21,7 @@
 
 module Main where
 
-import Data.List (group)
+import Data.List
 
 -- mergeAll stuff
 (#) :: (Ord a) => [a] -> [a] -> [a]
@@ -34,40 +34,27 @@ xs@(x:xt) # ys@(y:yt) | x < y = x : (xt # ys)
 mergeAll :: (Ord a) => [[a]] -> [a]
 mergeAll ([] : zs) = mergeAll zs
 mergeAll (xxs@(x:xs) : yys@(y:ys) : zs)
-    | x <= y = x : mergeAll (xs : yys : zs)
+    | x < y = x : mergeAll (xs : yys : zs)
     | otherwise = mergeAll ((xxs # yys) : zs)
 
-coprime :: Integral t => t -> t -> Bool
 coprime n m = n `gcd` m == 1
 
 triple :: Integral t => t -> t -> t
--- triple u v = let g = u ^ 2
---                  h = 2 * (v ^ 2)
---                  i = 2 * u * v
---              in ((g + i) + (h + i) + (g + h + i))
-triple m n = 2 * m ^ 2 + 2 * m * n
+triple m n = (m ^ 2) - (n ^ 2) + 2 * m * n + (m ^ 2) + (n ^ 2)
+
+primitive_triples :: Integral t => [t]
+primitive_triples = concat [[triple m n | n <- [1..(m - 1)]] | m <- [2..1414]]
 
 multiples :: Integral t => t -> [t] -> [t]
 multiples n (x:xs) = n * x : multiples n xs
 multiples _ _ = []
 
-xor :: Bool -> Bool -> Bool
-p `xor` q = (p && (not q)) || ((not p) && q)
-
-primitives :: Integral t => [t]
-primitives = mergeAll [[triple m n | n <- [1..(m - 1)]
-                                   , m `coprime` n
-                                   , (odd m) `xor` (odd n)
-                                   ] | m <- [2..(floor . sqrt . fromIntegral $ 1500000)]]
+all_triples :: Integral t => [t]
+all_triples = sort $ concat $ [takeWhile (<1500000) $ multiples p [1..] | p <- primitive_triples]
 
 uniques :: Integral t => [t] -> [t]
-uniques lst = map (head) 
-            $ filter (\l -> length l == 1)
-            $ group lst
-
-all_triples :: Integral t => [t]
-all_triples = uniques $ mergeAll [multiples n primitives | n <- [1..]]
+uniques = map (head) . filter (\l -> length l == 1)
+                     . group
 
 main :: IO ()
-main = do print $ length $ takeWhile (<1500000) all_triples
-
+main = do print $ length $ uniques $ takeWhile (<1500000) $ all_triples

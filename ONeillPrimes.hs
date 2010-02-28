@@ -10,7 +10,7 @@
 -- this copyright message is retained and changed versions of the file
 -- are clearly marked.
 
-module ONeillPrimes (primes, sieve, calcPrimes, primesToNth, primesToLimit, prime_factors) where
+module ONeillPrimes (primes, sieve, calcPrimes, primesToNth, primesToLimit, prime_factors, factors) where
 
 prime_factors :: Integral t => t -> [t]
 prime_factors n = factor n primes
@@ -18,6 +18,10 @@ prime_factors n = factor n primes
                         | n `mod` p /= 0 = factor n ps
                         | otherwise = p : factor (n `div` p) (p:ps)
 
+factors :: Integral t => t -> [t]
+factors n = [d | d <- [1..(n `div` 2)] ++ [n]
+               , n `mod` d == 0
+               ]
 
 -- Priority Queues;  this is essentially a copy-and-paste-job of
 -- PriorityQ.hs.  By putting the code here, we allow the Haskell
