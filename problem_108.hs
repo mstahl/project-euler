@@ -24,12 +24,17 @@
 
 module Main where
 
-import ONeillPrimes (factors)
-import Data.List (nub)
+import ONeillPrimes (prime_factors)
+import Data.List (nub, group)
+
+num_divisors :: Integral t => t -> Int
+num_divisors n = 
+  let a_i = map (length) $ group $ prime_factors n
+  in product $ map ((+)1) a_i
 
 num_solutions :: Integral t => t -> Int
 num_solutions n = (q + 1) `div` 2
-                  where q = length $ factors $ n ^ 2
+                  where q = num_divisors $ n ^ 2
 
 main :: IO ()
-main = do print $ length $ takeWhile (\n -> (num_solutions n) < 1000) [1..]
+main = do print $ length $ takeWhile (\n -> (num_solutions n) < 1000) [0..]
