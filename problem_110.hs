@@ -28,4 +28,6 @@ num_solutions n = (q + 1) `div` 2
                   where q = num_divisors $ n ^ 2
 
 main :: IO ()
-main = do print $ length $ takeWhile (\n -> (num_solutions n) < 4000000) [0..]
+main = do print $ length 
+                $ takeWhile (<4000000) 
+                $ map (num_solutions) [0..]
