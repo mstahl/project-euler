@@ -26,30 +26,48 @@
 
 module Main where
 
--- Algorithm somewhat lifted from:
--- http://www.maths.surrey.ac.uk/hosted-sites/R.Knott/Fibonacci/cfINTRO.html#sqrtcf
--- convergents n = 
---   let convergents' n n1 d1 = let next_n = ((floor . sqrt . fromIntegral $ n) + n1) `div` d1
---                                  n2 = d1
---                                  d2 = n1 - (d1 * next_n)
---                                  n3 = -d2
---                                  d3 = (n - (d2 ^ 2)) `div` n2
---                              in if d3 == 1 
---                                 then [next_n, (floor . sqrt . fromIntegral $ n) * 2]
---                                 else next_n : (convergents' n n3 d3)
---   in convergents' n 0 1
+perfect_square :: Integral t => t -> Bool
+perfect_square n = q * q == n where q = floor . sqrt . fromIntegral $ n
 
-convergents n = 
-  let convergents' n n1 d1 = let next_n = ((floor . sqrt . fromIntegral $ n) + n1) `div` d1
-                                 n2 = d1
-                                 d2 = n1 - (d1 * next_n)
-                                 n3 = -d2
-                                 d3 = (n - (d2 ^ 2)) `div` n2
-                             in if d3 == 1 
-                                then [(n3, d3)]
-                                else (n3, d3) : (convergents' n n3 d3)
-  in convergents' n 0 1
+-- def CF_of_sqrt(n):
+--     if is_square(n):
+--         return [int(math.sqrt(n))]
+-- 
+--     ans = []
+-- 
+--     n1 = 0
+--     d1 = 1
+-- 
+--     while True:
+--         nextn = int((math.floor(math.sqrt(n)) + n1) / d1)
+--         ans.append(int(nextn))
+-- 
+--         n2 = d1
+--         d2 = h - k * (((floor . sqrt . fromIntegral $ n) + h) `div` k)
+-- 
+--         d3 = (n - (h - k * (((floor . sqrt . fromIntegral $ n) + h) `div` k)) ** 2) / k
+--         n3 = k * (((floor . sqrt . fromIntegral $ n) + h) `div` k) - h
+-- 
+--         if d3 == 1:
+--             ans.append(ans[0] * 2)
+--             break
+-- 
+--         n1, d1 = n3, d3
+-- 
+--     return ans
 
-
-
-
+-- square_root_convergents :: Integral t => t -> [(t, t)]
+-- square_root_convergents n 
+--   | perfect_square n = floor . sqrt . fromIntegral $ n
+--   | otherwise = let next_c (h, k) | k == 1 = [(h, k)]
+--                                   | otherwise = (h', k') : square_root_convergents n'
+--                                                 where n' = ((floor . sqrt . fromIntegral $ n) + h) `div` k
+--                                                       h' = (k * n') - h
+--                                                       k' = (n - (h - k * (n' ** 2))) / k
+--                 in next_c (0, 1)
+-- square_root_convergents _ _ 1 = []
+square_root_convergents n h k = 
+  let m  = ((floor . sqrt . fromIntegral $ n) + h) `div` k
+      h' = (m * k) - h
+      k' = ((n - (h ^ 2)) `div` k) + (2 * m * h) - ((m ^ 2) * k)
+  in (h, k) : square_root_convergents n h' k'
