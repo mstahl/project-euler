@@ -13,14 +13,19 @@
 
 module Main where
 
-import MillerRabin (powMod)
+import MillerRabin (powMod, prime)
+import ONeillPrimes (primes)
 
 r_divisible_by :: Integral t => t -> t -> Bool
 r_divisible_by k n = powMod n 10 k == 1
 
-a :: Integral t => t -> t
-a n = head $ filter (\k -> r_divisible_by k n) [1..]
+-- a :: Integral t => t -> t
+-- a n = head $ filter (\k -> r_divisible_by k n) [1..]
+
+-- a :: Integer -> Int
+a n = (+) 1 $ length $ takeWhile ((/=)0) $ repunits
+      where repunits = iterate (\r -> (10 * r + 1) `mod` n) 1
 
 main :: IO ()
-main = do let ns = [k | k <- [11..], k `gcd` 10 == 1]
+main = do let ns = [k | k <- [1000001,1000003..], gcd k 10 == 1]
           print $ head $ dropWhile (\n -> a n < 1000000) ns

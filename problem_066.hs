@@ -26,48 +26,27 @@
 
 module Main where
 
+import Ratio
+
 perfect_square :: Integral t => t -> Bool
 perfect_square n = q * q == n where q = floor . sqrt . fromIntegral $ n
 
--- def CF_of_sqrt(n):
---     if is_square(n):
---         return [int(math.sqrt(n))]
--- 
---     ans = []
--- 
---     n1 = 0
---     d1 = 1
--- 
---     while True:
---         nextn = int((math.floor(math.sqrt(n)) + n1) / d1)
---         ans.append(int(nextn))
--- 
---         n2 = d1
---         d2 = h - k * (((floor . sqrt . fromIntegral $ n) + h) `div` k)
--- 
---         d3 = (n - (h - k * (((floor . sqrt . fromIntegral $ n) + h) `div` k)) ** 2) / k
---         n3 = k * (((floor . sqrt . fromIntegral $ n) + h) `div` k) - h
--- 
---         if d3 == 1:
---             ans.append(ans[0] * 2)
---             break
--- 
---         n1, d1 = n3, d3
--- 
---     return ans
+split :: [(a, b)] -> ([a], [b])
+split l = (map (fst) l, map (snd) l)
 
--- square_root_convergents :: Integral t => t -> [(t, t)]
--- square_root_convergents n 
---   | perfect_square n = floor . sqrt . fromIntegral $ n
---   | otherwise = let next_c (h, k) | k == 1 = [(h, k)]
---                                   | otherwise = (h', k') : square_root_convergents n'
---                                                 where n' = ((floor . sqrt . fromIntegral $ n) + h) `div` k
---                                                       h' = (k * n') - h
---                                                       k' = (n - (h - k * (n' ** 2))) / k
---                 in next_c (0, 1)
--- square_root_convergents _ _ 1 = []
 square_root_convergents n h k = 
   let m  = ((floor . sqrt . fromIntegral $ n) + h) `div` k
       h' = (m * k) - h
       k' = ((n - (h ^ 2)) `div` k) + (2 * m * h) - ((m ^ 2) * k)
-  in (h, k) : square_root_convergents n h' k'
+  in m : square_root_convergents n h' k'
+continued_fraction n = 
+  let m2 = 2 * (floor . sqrt . fromIntegral $ n)
+  in takeWhile (/=m2) $ square_root_convergents n 0 1
+
+-- solution :: Integral t => t -> (t, t)
+solution n = if (odd r) then (p !! r, q !! r) else (p !! ((2 * r) + 1), q !! ((2 * r) + 1))
+  where a = square_root_convergents n 0 1
+        r = (length $ takeWhile (/=(2 * (head a))) a) - 1
+        p = (floor . sqrt . fromIntegral $ n) : (((a !! 0) * (a !! 1)) + 1) : zipWith3 (\an pn1 pn2 -> an * pn1 + pn2) (drop 2 a) (tail p) p
+        q = 1 : (head a) : zipWith3 (\an qn1 qn2 -> an * qn1 + qn2) (drop 2 a) (tail q) q
+
