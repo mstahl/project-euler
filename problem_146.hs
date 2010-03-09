@@ -8,21 +8,23 @@
 
 module Main where
 
-import ONeillPrimes
+import MillerRabin
+import Control.Parallel
+import Control.Parallel.Strategies
 
+parFilter :: (a -> Bool) -> [a] -> [a]
+parFilter _ [] = []
+parFilter f (x:xs) =
+  let px = f x
+      pxs = parFilter f xs
+  in par px $ par pxs $ case px of True -> x : pxs
+                                   False -> pxs
+
+perfect_square :: Integral t => t -> Bool
 perfect_square n = m * m == n where m = floor . sqrt . fromIntegral $ n
 
-differences (a, b, c, d, e, f) = and [ a - 1 == b - 3
-                                     , b - 3 == c - 7
-                                     , c - 7 == d - 9
-                                     , d - 9 == e - 13
-                                     , e - 13 == f - 27
-                                     ]
+test n = [m + 1, m + 3, m + 7, m + 9, m + 13, m + 27] == parFilter (prime) [(m + 1)..(m + 27)]
+         where m = n * n
 
-test (a:b:c:d:e:f:fs) | (perfect_square (a - 1)) && (differences (a, b, c, d, e, f)) = a : test (b:c:d:e:f:fs)
-                      | otherwise = test (b:c:d:e:f:fs)
-
--- candidates = [(floor . sqrt . fromIntegral) (n - 1) | n <- test primes]
-candidates = map (floor . sqrt . fromIntegral . ((flip (-))1)) $ test primes
-
-main = do print $ take 2 $ candidates
+main :: IO ()
+main = do print $ sum $ parFilter (test) [1..999999]

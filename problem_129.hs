@@ -19,10 +19,7 @@ import ONeillPrimes (primes)
 r_divisible_by :: Integral t => t -> t -> Bool
 r_divisible_by k n = powMod n 10 k == 1
 
--- a :: Integral t => t -> t
--- a n = head $ filter (\k -> r_divisible_by k n) [1..]
-
--- a :: Integer -> Int
+a :: Integral t => t -> Int
 a n = (+) 1 $ length $ takeWhile ((/=)0) $ repunits
       where repunits = iterate (\r -> (10 * r + 1) `mod` n) 1
 
