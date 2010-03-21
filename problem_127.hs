@@ -28,9 +28,10 @@ import ONeillPrimes
 import Data.List (nub)
 
 hits :: Integral t => [(t, t, t)]
-hits = [(a, b, c) | b <- [2..]
+hits = [(a, b, c) | b <- [2..120000]
                   , a <- [1..(b - 1)]
                   , let c = a + b
+                  , c < 120000
                   , all ((==)1) [a `gcd` b, a `gcd` c, b `gcd` c]
                   , (product $ concatMap (nub . prime_factors) [a, b, c]) < c
                   ]
@@ -39,8 +40,7 @@ cs :: Integral t => [t]
 cs = map (\(_, _, c) -> c) hits
 
 main :: IO ()
-main = do let cs' = filter (<1000) $ takeWhile (<2000) cs
-          print $ cs'
-          print $ length cs'
-          print $ sum cs'
+main = do print $ cs
+          print $ length cs
+          print $ sum cs
 

@@ -15,11 +15,13 @@ import Squarefrees  ((#), mergeAll)
 import ONeillPrimes
 import Data.List (nub)
 
-limit = 200000
+limit = 10 ^ 6
 
-myprimes = primesToLimit (limit `div` 2)
+-- myprimes = primesToLimit (limit `div` 2)
 
-semiprimes = mergeAll [[p * q | q <- myprimes] | p <- primes]
+semiprimes = mergeAll [[p * q | q <- takeWhile (<=p) primes] | p <- primes]
 
 main :: IO ()
-main = do print $ length $ takeWhile (<limit) semiprimes
+main = do let sps = takeWhile (<limit) semiprimes
+          print sps
+          print $ length $ sps

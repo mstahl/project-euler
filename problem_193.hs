@@ -12,6 +12,5 @@ import Squarefrees
 
 import System
 
-main = do args <- getArgs
-          let m = (read (args !! 0))::Integer
-          print $ length $ takeWhile (<m) squarefree
+main :: IO () 
+main = do print $ length $ takeWhile (<limit) squarefree
