@@ -1,4 +1,6 @@
 -- Module for computing the infinite sorted list of squarefree integers.
+-- 
+-- Taken from http://byorgey.wordpress.com/2007/09/01/squarefree-numbers-in-haskell/
 
 module Squarefrees (squarefree, (#), mergeAll) where
 
