@@ -2,13 +2,13 @@
 -- 
 -- Taken from http://byorgey.wordpress.com/2007/09/01/squarefree-numbers-in-haskell/
 
-module Squarefrees (squarefree, (#), mergeAll) where
+module Squarefrees (squarefrees_below, squarefree, (#), mergeAll) where
 
-import Data.List (mapAccumL)
-import ONeillPrimes (primes)
+import Data.List (mapAccumL,nub)
+import ONeillPrimes (primes, prime_factors)
 
--- sieve (x:xs) = x : sieve (filter (\n -> n `mod` x /= 0) xs)
--- primes = sieve [2..]
+import Control.Parallel
+import Control.Parallel.Strategies
 
 -- merge two nondecreasing lists.
 (#) :: (Ord a) => [a] -> [a] -> [a]
@@ -42,3 +42,14 @@ primeLists = snd $ mapAccumL primeStep [1] primes
 
 -- to get a sorted list of squarefree numbers, just merge primeLists.
 squarefree = 1 : mergeAll primeLists
+
+-- Implementation of the algorithm found here: 
+-- http://www.numericana.com/answer/counting.htm
+squarefrees_below n = 
+  let m n = if even . length . nub . prime_factors $ n
+            then 1
+            else (-1)
+      limit = floor . sqrt . fromIntegral $ n
+      counts = parMap rwhnf (\q -> (m q) * (n `div` (q ^ 2)))
+             $ takeWhile (<=limit) squarefree
+  in n + (sum counts)

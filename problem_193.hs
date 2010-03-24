@@ -3,6 +3,8 @@
 -- 7, 10, 11 are squarefree, but not 4, 8, 9, 12.
 -- 
 -- How many squarefree numbers are there below 2^50?
+-- 
+-- http://projecteuler.net/index.php?section=problems&id=193
 
 module Main where
 
@@ -10,7 +12,14 @@ import Data.List
 import ONeillPrimes
 import Squarefrees
 
-import System
+limit = 2 ^ 40
+limit2 = floor . sqrt . fromIntegral $ limit
+
+mysquarefrees = takeWhile (<limit2) squarefree
+
 
 main :: IO () 
-main = do print $ length $ takeWhile (<limit) squarefree
+-- main = do print $ squarefrees_below limit
+main = do print $ limit2
+          mapM_ (print) mysquarefrees
+          print $ length mysquarefrees
