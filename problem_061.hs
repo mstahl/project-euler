@@ -25,31 +25,48 @@ module Main where
 
 import Data.List (nub, (\\))
 
-triangles = takeWhile (<10000) $ drop 44 [n * (n + 1) `div` 2 | n <- [1..]]
-squares =   takeWhile (<10000) $ drop 31 [n ^ 2 | n <- [1..]]
-pentagons = takeWhile (<10000) $ drop 25 [n * (3 * n - 1) `div` 2 | n <- [1..]]
-hexagons =  takeWhile (<10000) $ drop 22 [n * (2 * n - 1) | n <- [1..]]
-heptagons = takeWhile (<10000) $ drop 20 [n * (5 * n - 3) `div` 2 | n <- [1..]]
-octagons =  takeWhile (<10000) $ drop 18 [n * (3 * n - 2) | n <- [1..]]
+triangles = takeWhile (<10000) $ dropWhile (<1000) $ [n * (n + 1) `div` 2 | n <- [1..]]
+squares =   takeWhile (<10000) $ dropWhile (<1000) $ [n ^ 2 | n <- [1..]]
+pentagons = takeWhile (<10000) $ dropWhile (<1000) $ [n * (3 * n - 1) `div` 2 | n <- [1..]]
+hexagons =  takeWhile (<10000) $ dropWhile (<1000) $ [n * (2 * n - 1) | n <- [1..]]
+heptagons = takeWhile (<10000) $ dropWhile (<1000) $ [n * (5 * n - 3) `div` 2 | n <- [1..]]
+octagons =  takeWhile (<10000) $ dropWhile (<1000) $ [n * (3 * n - 2) | n <- [1..]]
 
--- This method breaks the numbers in the 6-tuple into two-digit chunks then
--- counts the number of unique ones. If six numbers are cyclical, each pair
--- should be repeated twice, once on one number and again on the next. So,
--- if a given set of 4-digit numbers is cyclical, there should be as many
--- unique 2-digit chunks as there are numbers.
-inits = map (\x -> x `div` 100)
-tails = map (\x -> x `mod` 100)
-set (a, b, c, d, e, f) = 
-  (inits [a,b,c,d,e,f]) \\ (tails [a,b,c,d,e,f]) == []
+begins_with :: Integral t => t -> t -> Bool
+begins_with xx xxxx = xxxx `div` 100 == xx
 
-answers = [(tr, sq, pe, hx, hp, oc) | tr <- triangles
-                                    , sq <- squares
-                                    , pe <- pentagons
-                                    , hx <- hexagons
-                                    , hp <- heptagons
-                                    , oc <- octagons
-                                    , set (tr, sq, pe, hx, hp, oc)
+ends_with :: Integral t => t -> t -> Bool
+ends_with xx xxxx = xxxx `mod` 100 == xx
+
+figurates = [ (a, b, c, d, e, f) 
+            | a <- octagons
+            , b <- filter (ends_with (a `div` 100)) triangles
+            , c <- filter (ends_with (b `div` 100)) hexagons
+            , d <- filter (ends_with (c `div` 100)) pentagons
+            , e <- filter (ends_with (d `div` 100)) heptagons
+            , f <- filter (ends_with (e `div` 100)) squares
+            ]
+
+test_figurate = [(a, b, c, d, e, f) | a <- octagons
+                                    , b <- filter (begins_with (a `mod` 100)) triangles
+                                    , c <- filter (begins_with (a `mod` 100)) hexagons
+                                    , d <- filter (begins_with (a `mod` 100)) pentagons
+                                    , e <- filter (begins_with (a `mod` 100)) heptagons
+                                    , f <- filter (begins_with (a `mod` 100)) squares
                                     ]
 
+set :: Integral t => (t, t, t, t, t, t) -> Bool
+set (a, b, c, d, e, f) = 
+  let inits = map (\x -> x `div` 100) [a, b, c, d, e, f]
+      tails = map (\x -> x `mod` 100) [a, b, c, d, e, f]
+  in inits \\ tails == []
+
 main :: IO ()
-main = do print $ head $ answers
+main = do putStrLn $ "There are " ++ (show $ length $ octagons ) ++ " octagonal numbers"
+          putStrLn $ "There are " ++ (show $ length $ heptagons) ++ " heptagonal numbers"
+          putStrLn $ "There are " ++ (show $ length $ hexagons ) ++ " hexagonal numbers"
+          putStrLn $ "There are " ++ (show $ length $ pentagons) ++ " pentagonal numbers"
+          putStrLn $ "There are " ++ (show $ length $ squares  ) ++ " square numbers"
+          putStrLn $ "There are " ++ (show $ length $ triangles) ++ " triangle numbers"
+          print $ filter (\x -> (set x)) figurates
+

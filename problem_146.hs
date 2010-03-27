@@ -9,6 +9,7 @@
 module Main where
 
 import MillerRabin
+
 import Control.Parallel
 import Control.Parallel.Strategies
 
@@ -23,8 +24,8 @@ parFilter f (x:xs) =
 perfect_square :: Integral t => t -> Bool
 perfect_square n = m * m == n where m = floor . sqrt . fromIntegral $ n
 
-test n = [m + 1, m + 3, m + 7, m + 9, m + 13, m + 27] == parFilter (prime) [(m + 1)..(m + 27)]
+test n = [m + 1, m + 3, m + 7, m + 9, m + 13, m + 27] == filter (prime) [(m + 1)..(m + 27)]
          where m = n * n
 
 main :: IO ()
-main = do print $ sum $ parFilter (test) [1..999999]
+main = do print $ sum $ filter (test) [1..999999]

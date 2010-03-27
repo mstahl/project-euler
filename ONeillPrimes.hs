@@ -10,9 +10,9 @@
 -- this copyright message is retained and changed versions of the file
 -- are clearly marked.
 
-module ONeillPrimes (primes, sieve, calcPrimes, primesToNth, primesToLimit, prime_factors, factors) where
+module ONeillPrimes (composites, primes, sieve, calcPrimes, primesToNth, primesToLimit, prime_factors, factors) where
 
--- mstahl changes
+-- mstahl changes (github.com/mstahl)
 prime_factors :: Integral t => t -> [t]
 prime_factors n = factor n primes
   where factor n (p:ps) | p > n = []
@@ -23,6 +23,18 @@ factors :: Integral t => t -> [t]
 factors n = [d | d <- [1..(n `div` 2)] ++ [n]
                , n `mod` d == 0
                ]
+-- end mstahl changes
+
+-- This is a function to lazily delete the intersection of two lists,
+-- so that this module can lazily generate composite numbers. The head
+-- of the second list is always the next element from the first list that
+-- won't be included. It's not exported so as not to conflict with 
+-- Data.List.(\\)
+(\\) :: (Ord t, Eq t) => [t] -> [t] -> [t]
+(x:xs) \\ (y:ys) | x == y = xs \\ ys
+                 | x < y = x : (xs \\ (y:ys))
+composites :: Integral t => [t]
+composites = [1..] \\ primes
 -- end mstahl changes
 
 -- Priority Queues;  this is essentially a copy-and-paste-job of

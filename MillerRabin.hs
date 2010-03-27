@@ -15,6 +15,14 @@ prime n | n < 2 = True
         | otherwise = all (millerRabinPrimality n) [2..m]
                       where m = min (n - 1) (floor (2 * ((log (fromIntegral n)) ** 2)))
 
+primes = filter (prime) [2..]
+
+-- prime_factors :: Integer -> [t]
+prime_factors n = factor n primes
+  where factor n (p:ps) | p > n = []
+                        | n `mod` p /= 0 = factor n ps
+                        | otherwise = p : factor (n `div` p) (p:ps)
+
 millerRabinPrimality :: Integer -> Integer -> Bool
 millerRabinPrimality n a
     | a <= 1 || a > n-1 = 

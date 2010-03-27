@@ -13,9 +13,12 @@
 
 module Main where
 
+import Control.Parallel
+import Control.Parallel.Strategies
+
 import ONeillPrimes
 
-consecutives = takeWhile (\(p1, _) -> p1 < 1000000) $ drop 2 $ zip primes (tail primes)
+consecutives = takeWhile ((<1000000) . fst) $ drop 2 $ zip primes (tail primes)
 
 num_digits n = length $ show n
 
@@ -27,8 +30,12 @@ s (p1, p2) = p2 * p3
              where p3 = (+) 1 $ ilength $ takeWhile ((/=)p1)
                               $ iterate (\n -> (n + p2) `mod` (10 ^ (num_digits p1))) p2
 
-answers = map (s) consecutives
+answers = parMap rwhnf (s) consecutives
+
+-- main :: IO ()
+-- main = do let answers' = zip consecutives answers
+--           mapM_ (print) answers'
+--           print $ sum answers
 
 main :: IO ()
-main = do print $ answers
-          print $ sum answers
+main = do print $ sum answers

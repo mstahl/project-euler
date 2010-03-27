@@ -15,11 +15,16 @@ import Squarefrees  ((#), mergeAll)
 import ONeillPrimes
 import Data.List (nub)
 
-limit = 200000
+limit = 10 ^ 8
 
-myprimes = primesToLimit (limit `div` 2)
+-- pi1 and pi2 are the prime and semiprime counting functions, respectively
+pi1 :: (Integral a) => a -> Int
+pi1 x = length $ takeWhile (<=x) primes
 
-semiprimes = mergeAll [[p * q | q <- myprimes] | p <- primes]
+pi2 :: (Integral a) => a -> Int
+pi2 x = sum $ map (\(p, k) -> (pi1 (x `div` p)) - k + 1)
+            $ zip primes [1..limit]
+        where limit = pi1 . floor . sqrt . fromIntegral $ x
 
 main :: IO ()
-main = do print $ length $ takeWhile (<limit) semiprimes
+main = do print $ pi2 $ 10 ^ 8
