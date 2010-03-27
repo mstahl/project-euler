@@ -13,13 +13,27 @@
 
 module Main where
 
+import Data.List (sort)
+
+digits :: Integral t => t -> [t]
+digits n
+  | n < 10 = [n]
+  | otherwise = y:digits x 
+  where
+    (x, y) = divMod n 10
+
 sum_digits :: Integral t => t -> t
-sum_digits 0 = 0
-sum_digits n = (n `mod` 10) + sum_digits (n `div` 10)
+sum_digits = sum . digits
 
-test :: Integral t => t -> Bool
-test n = if s == 1 then False else (floor m) == (ceiling m)
-         where s = sum_digits n
-               m = (log . fromIntegral $ n) / (log . fromIntegral $ s)
+-- First generate a list, in order, of all numbers raised to all exponents
+-- that qualify.
+a = sort [e | a <- [2..200]
+            , b <- [2..15]
+            , let e = a ^ b
+            , a == sum_digits e
+            ]
 
-a_sequence = filter (test) [11..]
+main :: IO ()
+main = do print $ take 30 a
+
+-- My old solution was too slow, so I got this one from http://www.haskell.org/haskellwiki/Euler_problems/111_to_120#Problem_119

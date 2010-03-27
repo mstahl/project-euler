@@ -27,8 +27,11 @@
 module Main where
 
 digits :: Integral t => t -> [t]
-digits n | n > 0 = (n `mod` 10) : digits (n `div` 10)
-         | otherwise = []
+digits n
+  | n < 10 = [n]
+  | otherwise = y:digits x 
+  where
+    (x, y) = divMod n 10
 
 lychrels = iterate (\l -> l + (undigits $ reverse $ digits l))
 

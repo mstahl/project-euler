@@ -7,8 +7,11 @@
 module Main where
 
 digits :: Integral t => t -> [t]
-digits 0 = []
-digits n = (mod n 10) : digits (div n 10)
+digits n
+  | n < 10 = [n]
+  | otherwise = y:digits x 
+  where
+    (x, y) = divMod n 10
 
 main :: IO ()
 main = do print $ sum $ digits $ 2 ^ 1000

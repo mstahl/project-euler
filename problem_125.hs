@@ -33,8 +33,11 @@ square_sum :: Integral t => [t] -> t
 square_sum = sum . map (^2)
 
 digits :: Integral t => t -> [t]
-digits n | n == 0 = []
-         | otherwise = (n `mod` 10) : digits (n `div` 10)
+digits n
+  | n < 10 = [n]
+  | otherwise = y:digits x 
+  where
+    (x, y) = divMod n 10
 
 is_palindrome :: Integral t => t -> Bool
 is_palindrome n = m == (reverse m) where m = digits n

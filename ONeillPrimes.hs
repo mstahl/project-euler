@@ -12,6 +12,7 @@
 
 module ONeillPrimes (primes, sieve, calcPrimes, primesToNth, primesToLimit, prime_factors, factors) where
 
+-- mstahl changes
 prime_factors :: Integral t => t -> [t]
 prime_factors n = factor n primes
   where factor n (p:ps) | p > n = []
@@ -22,6 +23,7 @@ factors :: Integral t => t -> [t]
 factors n = [d | d <- [1..(n `div` 2)] ++ [n]
                , n `mod` d == 0
                ]
+-- end mstahl changes
 
 -- Priority Queues;  this is essentially a copy-and-paste-job of
 -- PriorityQ.hs.  By putting the code here, we allow the Haskell

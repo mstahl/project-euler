@@ -33,6 +33,6 @@ valid _ = True
 
 amicables = filter (valid) $ map (amicable_chain) [1..999999]
 
--- main :: IO ()
--- main = do print $ amicables
---           print take 10 amicables
+main :: IO ()
+main = do print $ amicables
+          print take 10 amicables
