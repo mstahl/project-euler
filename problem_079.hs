@@ -39,11 +39,9 @@ main = do let alphabet = Set.toList $ Set.fromList $ concat attempts
                           l_a1 <- Ht.lookup ht a1
                           l_a2 <- Ht.lookup ht a2
                           case l_a2 of
-                            Just x -> do y <- Ht.update ht a2 $ a0 : a1 : x
-                                         putStr ""
+                            Just x -> Ht.update ht a2 $ a0 : a1 : x
                           case l_a1 of
-                            Just x -> do y <- Ht.update ht a1 $ a0 : x
-                                         putStr ""
+                            Just x -> Ht.update ht a1 $ a0 : x
                 ) attempts
           befores <- mapM (\a -> do la_a <- Ht.lookup ht a
                                     case la_a of
