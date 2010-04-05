@@ -1,4 +1,22 @@
+-- A common security method used for online banking is to ask the user for
+-- three random characters from a passcode. For example, if the passcode was
+-- 531278, they may asked for the 2nd, 3rd, and 5th characters; the expected
+-- reply would be: 317.
+-- 
+-- The text file, keylog.txt (http://projecteuler.net/project/keylog.txt),
+-- contains fifty successful login attempts.
+-- 
+-- Given that the three characters are always asked for in order, analyse the
+-- file so as to determine the shortest possible secret passcode of unknown
+-- length.
+-- 
+-- http://projecteuler.net/index.php?section=problems&id=79
 
+module Main where
+
+import qualified Data.Set as Set
+import qualified Data.HashTable as Ht
+import Data.List (nub, sortBy)
 
 attempts :: [[Int]]
 attempts = [[3, 1, 9], [6, 8, 0], [1, 8, 0], [6, 9, 0], [1, 2, 9], [6, 2, 0],
@@ -11,3 +29,26 @@ attempts = [[3, 1, 9], [6, 8, 0], [1, 8, 0], [6, 9, 0], [1, 2, 9], [6, 2, 0],
             [3, 1, 9], [7, 6, 0], [3, 1, 6], [7, 2, 9], [3, 8, 0], [3, 1, 9],
             [7, 2, 8], [7, 1, 6]]
 
+main :: IO ()
+main = do let alphabet = Set.toList $ Set.fromList $ concat attempts
+          ht <- Ht.new (==) (Ht.hashInt)
+          mapM_ (\a -> Ht.insert ht a [a]) alphabet
+          mapM_ (\a -> do let a0 = a !! 0
+                              a1 = a !! 1
+                              a2 = a !! 2
+                          l_a1 <- Ht.lookup ht a1
+                          l_a2 <- Ht.lookup ht a2
+                          case l_a2 of
+                            Just x -> do y <- Ht.update ht a2 $ a0 : a1 : x
+                                         putStr ""
+                          case l_a1 of
+                            Just x -> do y <- Ht.update ht a1 $ a0 : x
+                                         putStr ""
+                ) attempts
+          befores <- mapM (\a -> do la_a <- Ht.lookup ht a
+                                    case la_a of
+                                      Just x -> return x
+                                      Nothing -> return [a]) alphabet
+          print $ map (last)
+                $ sortBy (\a b -> (length a) `compare` (length b))
+                $ map (nub) befores
