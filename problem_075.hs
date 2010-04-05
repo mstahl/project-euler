@@ -22,6 +22,8 @@
 module Main where
 
 import Data.List
+import Control.Parallel
+import Control.Parallel.Strategies
 
 triangles = [perimeter | n <- [2..1000]
                        , m <- [1..(n - 1)]

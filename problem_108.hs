@@ -26,6 +26,8 @@ module Main where
 
 import ONeillPrimes (prime_factors)
 import Data.List (nub, group)
+import Control.Parallel
+import Control.Parallel.Strategies
 
 num_divisors :: Integral t => t -> Int
 num_divisors n = 
@@ -39,4 +41,4 @@ num_solutions n = (q + 1) `div` 2
 main :: IO ()
 main = do print $ length 
                 $ takeWhile (<1000) 
-                $ map (num_solutions) [0..16000000]
+                $ parMap rwhnf (num_solutions) [0..16000000]

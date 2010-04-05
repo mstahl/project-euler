@@ -14,9 +14,6 @@
 # 
 # http://projecteuler.net/index.php?section=problems&id=79
 
-require 'set'
-require 'pp'
-
 attempts = [[3, 1, 9], [6, 8, 0], [1, 8, 0], [6, 9, 0], [1, 2, 9], [6, 2, 0],
             [7, 6, 2], [6, 8, 9], [7, 6, 2], [3, 1, 8], [3, 6, 8], [7, 1, 0],
             [7, 2, 0], [7, 1, 0], [6, 2, 9], [1, 6, 8], [1, 6, 0], [6, 8, 9],
@@ -27,30 +24,27 @@ attempts = [[3, 1, 9], [6, 8, 0], [1, 8, 0], [6, 9, 0], [1, 2, 9], [6, 2, 0],
             [3, 1, 9], [7, 6, 0], [3, 1, 6], [7, 2, 9], [3, 8, 0], [3, 1, 9],
             [7, 2, 8], [7, 1, 6]]
 
-digits = Set.new(attempts.flatten).to_a
-p digits.to_a
-
-passwords = Array.new
-digits.each do |d|
-  passwords[d] = []
+befores = []
+(0..9).each do |d|
+  befores << [d]
 end
 
-attempts.each do |attempt|
-  unless passwords[attempt[1]].include? attempt[0]
-    # puts "Adding #{attempt[0]} to #{passwords[attempt[1]].inspect}"
-    passwords[attempt[1]] << attempt[0] 
-  end
-  unless passwords[attempt[2]].include? attempt[0]
-    # puts "Adding #{attempt[0]} to #{passwords[attempt[2]].inspect}"
-    passwords[attempt[2]] << attempt[0] 
-  end
-  unless passwords[attempt[2]].include? attempt[1]
-    # puts "Adding #{attempt[1]} to #{passwords[attempt[2]].inspect}"
-    passwords[attempt[2]] << attempt[1] 
-  end
-end
-passwords.reject! {|a| a.nil?}.sort! do |a, b|
-  b.length <=> a.length
+attempts.each do |a|
+  befores[a[2]] << a[1]
+  befores[a[2]] << a[0]
+  befores[a[1]] << a[0]
 end
 
-p passwords[0]
+befores.map! do |b|
+  b.uniq!
+end
+
+answer = befores.reject {|b|
+  b.nil?
+}.sort  {|a, b|
+  a.length <=> b.length
+}
+
+answer = ([7] + answer.map {|l| l.first.to_s}).join
+
+puts answer
