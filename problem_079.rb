@@ -14,6 +14,8 @@
 # 
 # http://projecteuler.net/index.php?section=problems&id=79
 
+require 'set'
+
 attempts = [[3, 1, 9], [6, 8, 0], [1, 8, 0], [6, 9, 0], [1, 2, 9], [6, 2, 0],
             [7, 6, 2], [6, 8, 9], [7, 6, 2], [3, 1, 8], [3, 6, 8], [7, 1, 0],
             [7, 2, 0], [7, 1, 0], [6, 2, 9], [1, 6, 8], [1, 6, 0], [6, 8, 9],
@@ -24,9 +26,11 @@ attempts = [[3, 1, 9], [6, 8, 0], [1, 8, 0], [6, 9, 0], [1, 2, 9], [6, 2, 0],
             [3, 1, 9], [7, 6, 0], [3, 1, 6], [7, 2, 9], [3, 8, 0], [3, 1, 9],
             [7, 2, 8], [7, 1, 6]]
 
-befores = []
-(0..9).each do |d|
-  befores << [d]
+alphabet = attempts.flatten.to_set
+
+befores = Hash.new
+(alphabet.to_a).each do |d|
+  befores[d] = []
 end
 
 attempts.each do |a|
@@ -35,16 +39,14 @@ attempts.each do |a|
   befores[a[1]] << a[0]
 end
 
-befores.map! do |b|
-  b.uniq!
+befores.each do |k, v|
+  v.uniq!
 end
 
-answer = befores.reject {|b|
-  b.nil?
-}.sort  {|a, b|
-  a.length <=> b.length
+answer = befores.keys.sort  {|a, b|
+  befores[a].length <=> befores[b].length
 }
 
-answer = ([7] + answer.map {|l| l.first.to_s}).join
+answer = answer.map {|l| l.to_s}.join
 
 puts answer
