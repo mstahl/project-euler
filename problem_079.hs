@@ -47,6 +47,7 @@ main = do let alphabet = Set.toList $ Set.fromList $ concat attempts
                                     case la_a of
                                       Just x -> return x
                                       Nothing -> return [a]) alphabet
-          print $ map (last)
-                $ sortBy (\a b -> (length a) `compare` (length b))
-                $ map (nub) befores
+          mapM_ (putStr . show) $ map (last)
+                                $ sortBy (\a b -> (length a) `compare` (length b))
+                                $ map (nub) befores
+          putStrLn "\n"

@@ -45,8 +45,6 @@ end
 
 answer = befores.keys.sort  {|a, b|
   befores[a].length <=> befores[b].length
-}
-
-answer = answer.map {|l| l.to_s}.join
+}.map {|l| l.to_s}.join
 
 puts answer
