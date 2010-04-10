@@ -41,4 +41,4 @@ num_solutions n = (q + 1) `div` 2
 main :: IO ()
 main = do print $ length 
                 $ takeWhile (<1000) 
-                $ parMap rwhnf (num_solutions) [0..16000000]
+                $ map (num_solutions) [0..100000000]
