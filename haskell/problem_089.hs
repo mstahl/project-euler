@@ -72,3 +72,7 @@ main :: IO ()
 main = do numerals <- liftM lines . readFile $ "roman.txt"
           let numerals' = map (trim) numerals
           print $ sum $ map (\n -> (length n) - (length . optimize $ n)) numerals'
+
+-- Algorithm lifted from here: 
+-- http://code.activestate.com/recipes/415384-decimal-to-roman-numerals/
+-- Translated to Haskell by github.com/mstahl

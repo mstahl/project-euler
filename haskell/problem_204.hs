@@ -26,11 +26,8 @@ xs@(x:xt) # ys@(y:yt) | x < y = x : (xt # ys)
                       | x > y = y : (xs # yt)
                       | otherwise = x : (xt # yt)
 
-times :: (Integral a) => a -> [a] -> [a]
-times n (a:b) = n * a : times n b
-
 hammings :: Integral t => [t]
-hammings = 1 : foldl1 (#) [times r hammings | r <- takeWhile (<100) primes]
+hammings = 1 : foldl1 (#) [map (*r) hammings | r <- takeWhile (<100) primes]
 
 main :: IO ()
 main = do print $ length $ takeWhile (<=1000000000) hammings
