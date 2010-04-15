@@ -37,10 +37,10 @@ digits n
   where
     (x, y) = divMod n 10
 
-groups :: [Integer]
-groups = map (take 5) $ tails $ digits n
+groups :: [[Integer]]
+groups = map (take 5) . tails . digits $ n
 
-groups :: [Integer]
+products :: [Integer]
 products = map (product) groups
 
 main :: IO ()
