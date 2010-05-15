@@ -21,11 +21,12 @@ module Main where
 
 import Data.List
 
-sequence_from :: Integral t => t -> [t]
-sequence_from n | n == 1 = [1]
-                | even n = n : sequence_from (n `div` 2)
-                | otherwise = n : sequence_from (3 * n + 1)
+seq_length :: Integral t => t -> Int
+seq_length n = 
+  let next n | even n = n `div` 2
+             | otherwise = 3 * n + 1
+  in 1 + (length $ takeWhile (>1) $ iterate (next) n)
 
 main :: IO ()
-main = do let lengths = map (\n -> (n, (length . sequence_from) n)) [1..999999]
-          print $ fst $ maximumBy (\a b -> (snd a) `compare` (snd b)) lengths
+main = do print $ fst $ maximumBy (\a b -> compare (snd a) (snd b))
+                $ map (\n -> (n, seq_length n)) [2..999999]
