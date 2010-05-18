@@ -38,29 +38,6 @@ begins_with xx xxxx = xxxx `div` 100 == xx
 ends_with :: Integral t => t -> t -> Bool
 ends_with xx xxxx = xxxx `mod` 100 == xx
 
-figurates = [ (a, b, c, d, e, f) 
-            | a <- octagons
-            , b <- filter (ends_with (a `div` 100)) triangles
-            , c <- filter (ends_with (b `div` 100)) hexagons
-            , d <- filter (ends_with (c `div` 100)) pentagons
-            , e <- filter (ends_with (d `div` 100)) heptagons
-            , f <- filter (ends_with (e `div` 100)) squares
-            ]
-
-test_figurate = [(a, b, c, d, e, f) | a <- octagons
-                                    , b <- filter (begins_with (a `mod` 100)) triangles
-                                    , c <- filter (begins_with (a `mod` 100)) hexagons
-                                    , d <- filter (begins_with (a `mod` 100)) pentagons
-                                    , e <- filter (begins_with (a `mod` 100)) heptagons
-                                    , f <- filter (begins_with (a `mod` 100)) squares
-                                    ]
-
-set :: Integral t => (t, t, t, t, t, t) -> Bool
-set (a, b, c, d, e, f) = 
-  let inits = map (\x -> x `div` 100) [a, b, c, d, e, f]
-      tails = map (\x -> x `mod` 100) [a, b, c, d, e, f]
-  in inits \\ tails == []
-
 main :: IO ()
 main = do putStrLn $ "There are " ++ (show $ length $ octagons ) ++ " octagonal numbers"
           putStrLn $ "There are " ++ (show $ length $ heptagons) ++ " heptagonal numbers"

@@ -20,19 +20,25 @@
 
 module Main where
 
+import Data.List (maximumBy)
+import Data.Array
+
 amicable_next :: Int -> Int
-amicable_next m = sum [d | d <- [1..(m `div` 2)], m `mod` d == 0]
+amicable_next = 
+  let amicable_next' m = sum [d | d <- [1..(m `div` 2)], m `mod` d == 0]
+      memo_array = array (0, 999999) [(n, amicable_next' n) | n <- [0..999999]]
+  in (memo_array !)
 
-amicable_chain :: Int -> [Int]
-amicable_chain m = m : (takeWhile (/=m) $ tail $ iterate (amicable_next) m)
-
-valid (x:y:xs) | x >= y = False
-               | x > 1000000 = False
-               | otherwise = valid (y:xs)
-valid _ = True
-
-amicables = filter (valid) $ map (amicable_chain) [1..999999]
+chain_length :: Int -> Int
+chain_length n = 
+  let chain_length' sofar m | m > 1000000 = 0
+                            | m == 0 = 0
+                            | m `elem` sofar = 1
+                            | otherwise = 1 + (chain_length' (m:sofar) (amicable_next m))
+  in chain_length' [] (amicable_next n)
 
 main :: IO ()
-main = do print $ amicables
-          print take 10 amicables
+main = do let chains = [(n , chain_length n) | n <- [1..999999]]
+              cmp_snd = \a b -> (snd a) `compare` (snd b)
+          -- mapM_ (print) chains
+          print $ maximumBy (cmp_snd) chains
