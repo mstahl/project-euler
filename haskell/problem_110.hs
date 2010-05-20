@@ -27,7 +27,10 @@ num_solutions :: Integral t => t -> Int
 num_solutions n = (q + 1) `div` 2
                   where q = num_divisors $ n ^ 2
 
+lengthWhile :: (t -> Bool) -> [t] -> Int
+lengthWhile p lst = length $ takeWhile p lst
+
 main :: IO ()
-main = do print $ length 
-                $ takeWhile (<4000000) 
-                $ map (num_solutions) [0..]
+-- main = do print $ lengthWhile (<4000000) 
+--                 $ map (num_solutions) [0..]
+main = do mapM_ (print) $ map (\x -> (x, num_solutions x)) [0..200000]
