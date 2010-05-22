@@ -23,16 +23,14 @@ module Main where
 import Data.List (maximumBy)
 import Data.Array
 
-amicable_next :: Int -> Int
-amicable_next = 
-  let amicable_next' m = sum [d | d <- [1..(m `div` 2)], m `mod` d == 0]
-      memo_array = array (0, 999999) [(n, amicable_next' n) | n <- [0..999999]]
-  in (memo_array !)
+import Sigma
+
+amicable_next m = (sigma 1 m) - m
 
 chain_length :: Int -> Int
 chain_length n = 
-  let chain_length' sofar m | m > 1000000 = 0
-                            | m == 0 = 0
+  let chain_length' sofar m | m > 1000000 = -10000000
+                            | m == 0 = -10000000
                             | m `elem` sofar = 1
                             | otherwise = 1 + (chain_length' (m:sofar) (amicable_next m))
   in chain_length' [] (amicable_next n)

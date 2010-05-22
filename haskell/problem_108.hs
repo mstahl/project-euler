@@ -47,5 +47,5 @@ lengthWhile :: (t -> Bool) -> [t] -> Int
 lengthWhile p lst = length $ takeWhile p lst
 
 main :: IO ()
-main = do print $ lengthWhile (<2000) 
-                $ map (num_solutions) [0..]
+main = do print $ lengthWhile (<1000) 
+                $ parMap rwhnf (num_solutions) [0..]

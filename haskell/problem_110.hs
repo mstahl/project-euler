@@ -17,6 +17,8 @@ module Main where
 
 import ONeillPrimes (prime_factors)
 import Data.List (nub, group)
+import Control.Parallel
+import Control.Parallel.Strategies
 
 num_divisors :: Integral t => t -> Int
 num_divisors n = 
@@ -27,10 +29,14 @@ num_solutions :: Integral t => t -> Int
 num_solutions n = (q + 1) `div` 2
                   where q = num_divisors $ n ^ 2
 
+-- lengthWhile :: Integral t => (t -> Bool) -> [t] -> t
+-- lengthWhile _ [] = 0
+-- lengthWhile p (x:xs) | p x = succ $ lengthWhile p xs
+--                      | otherwise = 0
+
 lengthWhile :: (t -> Bool) -> [t] -> Int
 lengthWhile p lst = length $ takeWhile p lst
 
 main :: IO ()
--- main = do print $ lengthWhile (<4000000) 
---                 $ map (num_solutions) [0..]
-main = do mapM_ (print) $ map (\x -> (x, num_solutions x)) [0..200000]
+main = do print $ lengthWhile (<1000) 
+                $ parMap rwhnf (num_solutions) [0..]
