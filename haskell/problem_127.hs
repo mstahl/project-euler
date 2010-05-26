@@ -25,14 +25,16 @@
 module Main where
 
 import ONeillPrimes
-import Data.List (nub)
+import Data.List (nub, group)
 
 hits :: Integral t => [(t, t, t)]
-hits = [(a, b, c) | b <- [2..120000]
-                  , a <- [1..(b - 1)]
+hits = [(a, b, c) | b <- [2..1000]
+                  , a <- [1..(1000 - b)]
                   , let c = a + b
-                  , c < 120000
-                  , all ((==)1) [a `gcd` b, a `gcd` c, b `gcd` c]
+                  , c < 1000
+                  , a `gcd` b == 1
+                  , a `gcd` c == 1
+                  , b `gcd` c == 1
                   , (product $ concatMap (nub . prime_factors) [a, b, c]) < c
                   ]
 
@@ -40,7 +42,7 @@ cs :: Integral t => [t]
 cs = map (\(_, _, c) -> c) hits
 
 main :: IO ()
-main = do print $ cs
-          print $ length cs
+main = do -- mapM_ (print) cs
+          -- print $ length cs
           print $ sum cs
 

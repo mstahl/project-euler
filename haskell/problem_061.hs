@@ -15,6 +15,7 @@
 --   2. Each polygonal type: triangle (P_(3,127)=8128), square (P_(4,91)=8281), and
 -- pentagonal (P_(5,44)=2882), is represented by a different number in the set.
 --   3. This is the only set of 4-digit numbers with this property.
+-- 
 -- Find the sum of the only ordered set of six cyclic 4-digit numbers for which
 -- each polygonal type: triangle, square, pentagonal, hexagonal, heptagonal, and
 -- octagonal, is represented by a different number in the set.
@@ -23,20 +24,42 @@
 
 module Main where
 
-import Data.List (nub, (\\))
+import Data.List (nub, (\\), delete)
 
-triangles = takeWhile (<10000) $ dropWhile (<1000) $ [n * (n + 1) `div` 2 | n <- [1..]]
-squares =   takeWhile (<10000) $ dropWhile (<1000) $ [n ^ 2 | n <- [1..]]
+triangles = takeWhile (<10000) $ dropWhile (<1000) $ [n * (n + 1) `div` 2     | n <- [1..]]
+squares   = takeWhile (<10000) $ dropWhile (<1000) $ [n ^ 2                   | n <- [1..]]
 pentagons = takeWhile (<10000) $ dropWhile (<1000) $ [n * (3 * n - 1) `div` 2 | n <- [1..]]
-hexagons =  takeWhile (<10000) $ dropWhile (<1000) $ [n * (2 * n - 1) | n <- [1..]]
+hexagons  = takeWhile (<10000) $ dropWhile (<1000) $ [n * (2 * n - 1)         | n <- [1..]]
 heptagons = takeWhile (<10000) $ dropWhile (<1000) $ [n * (5 * n - 3) `div` 2 | n <- [1..]]
-octagons =  takeWhile (<10000) $ dropWhile (<1000) $ [n * (3 * n - 2) | n <- [1..]]
+octagons  = takeWhile (<10000) $ dropWhile (<1000) $ [n * (3 * n - 2)         | n <- [1..]]
+figurates = [triangles, squares, pentagons, hexagons, heptagons, octagons]
 
 begins_with :: Integral t => t -> t -> Bool
 begins_with xx xxxx = xxxx `div` 100 == xx
 
 ends_with :: Integral t => t -> t -> Bool
 ends_with xx xxxx = xxxx `mod` 100 == xx
+
+cyclez = [ [a, b, c, d, e, f]
+         | a <- octagons
+         , let figurates = delete octagons figurates
+         , lst_b <- figurates
+         , b <- filter (begins_with (a `mod` 100)) lst_b
+         , let figurates = delete lst_b figurates
+         , lst_c <- figurates
+         , c <- filter (begins_with (b `mod` 100)) lst_c
+         , let figurates = delete lst_c figurates
+         , lst_d <- figurates
+         , d <- filter (begins_with (c `mod` 100)) lst_d
+         , let figurates = delete lst_d figurates
+         , lst_e <- figurates
+         , e <- filter (begins_with (d `mod` 100)) lst_e
+         , let figurates = delete lst_e figurates
+         , lst_f <- figurates
+         , f <- filter (begins_with (e `mod` 100)) lst_f
+         ]
+
+answer = head $ filter (\[a, _, _, _, _, f] -> a `begins_with` (f `mod` 100)) cyclez
 
 main :: IO ()
 main = do putStrLn $ "There are " ++ (show $ length $ octagons ) ++ " octagonal numbers"
@@ -45,5 +68,5 @@ main = do putStrLn $ "There are " ++ (show $ length $ octagons ) ++ " octagonal 
           putStrLn $ "There are " ++ (show $ length $ pentagons) ++ " pentagonal numbers"
           putStrLn $ "There are " ++ (show $ length $ squares  ) ++ " square numbers"
           putStrLn $ "There are " ++ (show $ length $ triangles) ++ " triangle numbers"
-          print $ filter (\x -> (set x)) figurates
+          -- print $ filter (\x -> (set x)) figurates
 

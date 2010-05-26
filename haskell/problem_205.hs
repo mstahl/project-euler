@@ -10,6 +10,7 @@
 module Main where
 
 import Data.List
+import Text.Printf
 
 peter = [ a + b + c + d + e + f + g + h + i
         | a <- [1..4]
@@ -41,5 +42,5 @@ score =
                                        -> c_val < p_val) colin_freqs)) peter_freqs
 
 main :: IO ()
-main = do print $ (fromIntegral score) / (fromIntegral $ length peter * length colin)
+main = do printf "%0.7f\n" $ (((fromIntegral score) / (fromIntegral $ 4^9 * 6^6))::Float)
 

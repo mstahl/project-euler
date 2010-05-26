@@ -6,22 +6,12 @@
 
 module Main where
 
-import Data.List (group)
-import ONeillPrimes (primes, prime_factors)
+import Data.Array.Unboxed
+import Sigma
 
-max_n = (10 ^ 7) - 1
-
-count_true :: [Bool] -> Int
-count_true (x:xs) | x == True = 1 + count_true xs
-                  | otherwise = count_true xs
-count_true _ = 0
-
-num_divisors = product
-             . map ((+1) . length)
-             . group
-             . prime_factors
+-- sigmas :: UArray Int64
+sigmas = array (2, 10^7-1) [(n, num_divisors n) | n <- [2..(10^7-1)]]
 
 main :: IO ()
-main = do let nds = map (num_divisors) [1..max_n]
-          print $ count_true $ zipWith (==) nds (tail nds)
--- main = do mapM_ (\x -> putStrLn $ "d(" ++ (show x) ++ ") = " ++ (show $ num_divisors x)) [1..1000000]
+-- main = do print $ sigmas ! 12
+
