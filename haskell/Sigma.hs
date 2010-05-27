@@ -15,6 +15,7 @@ num_divisors n =
 
 divisors n = [d | d <- [1..(n `div` 2)], n `mod` d == 0] ++ [n]
 
+-- sigma :: Integral t => t -> t -> t
 sigma x n = 
   let pf = prime_factors_exp n
   in product $ map (\(p, a) -> sum $ map (\j -> p ^ (j * x)) [0..a]) pf
