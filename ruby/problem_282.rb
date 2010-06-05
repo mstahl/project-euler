@@ -14,26 +14,54 @@
 
 require 'pp'
 
-@ackermanns = Hash.new
-def ackermann(m, n)
-  if !@ackermanns["#{m},#{n}"].nil? then
-    return @ackermanns["#{m},#{n}"]
-  elsif m == 0 then
-    @ackermanns["#{m},#{n}"] ||= (n + 1) % (14 ^ 8)
-  elsif m > 0 and n == 0 then
-    @ackermanns["#{m},#{n}"] ||= (ackermann(m - 1, 1)) % (14 ^ 8)
-  else
-    @ackermanns["#{m},#{n}"] ||= (ackermann(m - 1, ackermann(m, n - 1))) % (14 ^ 8)
-  end
-  return @ackermanns["#{m},#{n}"]
+def ackermann(n)
+  upmod(14**8, n - 2, 2, n + 3) - 3
 end
+
+# def upmod(modulus, index, base, exponent)
+#   x = base
+#   index.times do
+#     exponent.times do
+#       x = powmod base, x, modulus
+#     end
+#   end
+#   return x
+# end
+
+def upmod(modulus, index, base, exponent)
+  if index == 1 then
+    powmod(base, exponent, modulus)
+  elsif exponent == 0 then
+    1
+  else
+    upmod(modulus, index - 1, base, upmod(modulus, index, base, exponent - 1))
+  end
+end
+
+# Shamelessly ripped off from here:
+# http://en.wikipedia.org/wiki/Modular_exponentiation#Right-to-left_binary_method
+def powmod(base, exponent, modulus)
+  result = 1
+  while exponent > 0 do
+    if exponent & 1 then
+      result = (result * base) % modulus
+    end
+    exponent >>= 1
+    base = (base * base) % modulus
+  end
+  return result
+end
+
 
 if __FILE__ == $0 then
   # main
   # p ackermann(0, 0)
   # p ackermann(1, 1)
   # p ackermann(2, 2)
-  p ackermann(3, 4)
+  # p ackermann(3, 4)
+  # 
+  # pp @ackermanns
   
-  pp @ackermanns
+  p upmod(100000000000, 2, 2, 4)    # => 65536
+  p upmod(14**8, 3, 2, 20)
 end

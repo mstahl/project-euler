@@ -9,9 +9,17 @@ module Main where
 import Data.Array.Unboxed
 import Sigma
 
--- sigmas :: UArray Int64
-sigmas = array (2, 10^7-1) [(n, num_divisors n) | n <- [2..(10^7-1)]]
+import Control.Parallel
+import Control.Parallel.Strategies
+
+mx = 10^6 - 1
+-- mx = 25
+
+-- sigmas :: [Int]
+-- sigmas = [(n, sigma 0 n) | n <- [2..(mx)]]
+sigmas = parBuffer 4 rwhnf $ map (\n -> (n, num_divisors n)) [2..(mx)]
 
 main :: IO ()
--- main = do print $ sigmas ! 12
+main = do --mapM_ (print) sigmas
+          print $ sum $ zipWith (\a b -> if snd a == snd b then 1 else 0) sigmas $ tail sigmas
 

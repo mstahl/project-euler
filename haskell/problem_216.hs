@@ -9,7 +9,15 @@
 
 module Main where
 
-import MillerRabin (prime)
+import MillerRabin (millerRabinPrimality)
+import ONeillPrimes (primes)
+
+prime :: Integer -> Bool
+prime n | n < 2 = True
+        | n `elem` [2,3,5,7,11,13,17,23] = True
+        | n < 341550071728321 = all (millerRabinPrimality n) [2,3,5,7,11,13,17]
+        | otherwise = all (millerRabinPrimality n) myprimes
+                      where myprimes = takeWhile (<=2613) primes
 
 tns = [n | n <- [2..50000000], prime (2 * (n ^ 2) - 1)]
 
