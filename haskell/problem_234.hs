@@ -19,24 +19,13 @@ module Main where
 
 import ONeillPrimes
 
-lps :: Integral t => t -> t
-lps n = last $ takeWhile (<=s) primes
-        where s = ceiling . sqrt . fromIntegral $ n
-
-ups :: Integral t => t -> t
-ups n = head $ dropWhile (<s) primes
-        where s = ceiling . sqrt . fromIntegral $ n
-
-xor :: Bool -> Bool -> Bool
-a `xor` b = (a && (not b)) || ((not a) && b)
-
-semidivisible :: Integral t => t -> Bool
-semidivisible n = let l = lps n
-                      u = ups n
-                  in (n `mod` l == 0) `xor` (n `mod` u == 0)
-
-semidivisibles = filter (semidivisible) [4..1000]
+count (p:q:xs) = 
+  let n = p ^ 2
+      m = q ^ 2
+      ps = [x | x <- [n,(n+p)..m], x `mod` q /= 0]
+      qs = [y | y <- [m,(m-q)..n], y `mod` p /= 0]
+  in (length ps) + (length qs) + (count (q:xs))
+count _ = 0
 
 main :: IO ()
-main = do print $ length semidivisibles
-          print $ sum semidivisibles
+main = do print $ count $ takeWhile (<=37) primes

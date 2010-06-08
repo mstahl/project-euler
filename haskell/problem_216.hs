@@ -9,17 +9,16 @@
 
 module Main where
 
-import MillerRabin (millerRabinPrimality)
-import ONeillPrimes (primes)
+import MillerRabin (prime)
 
-prime :: Integer -> Bool
-prime n | n < 2 = True
-        | n `elem` [2,3,5,7,11,13,17,23] = True
-        | n < 341550071728321 = all (millerRabinPrimality n) [2,3,5,7,11,13,17]
-        | otherwise = all (millerRabinPrimality n) myprimes
-                      where myprimes = takeWhile (<=2613) primes
+perfect_square n = m * m == n where m = round $ sqrt $ fromIntegral n
 
-tns = [n | n <- [2..50000000], prime (2 * (n ^ 2) - 1)]
+-- limit = 50000000
+limit = 200
+
+ns = [n | n <- [2..limit], prime $ 2 * n * n - 1]
 
 main :: IO ()
-main = do print $ length tns
+main = do print $ length $ ns
+          print $ ns
+

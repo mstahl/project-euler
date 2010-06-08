@@ -29,32 +29,21 @@
 module Main where
 
 import Totient
-import Ratio
-import ONeillPrimes (composites)
+import Data.Ratio
+import Data.List (inits,tails)
+import MillerRabin (prime)
 
-import Control.Parallel
-import Control.Parallel.Strategies
+limit = 2 * (10 ^ 11)
 
-resilience :: Integral t => t -> Ratio t
-resilience d = (totient d) % (d - 1)
+fermats = takeWhile (<limit) $ map (\k -> 2 ^ (2 ^ k) + 1) [0..]
 
-coresilience :: Integral t => t -> Ratio t
-coresilience d = (d - (totient d)) % (d - 1)
+consecutive = filter ((>1) . length) . concatMap (tails) . inits
 
--- limit = 2 * (10 ^ 11)
-limit = 10 ^ 6
-
-test :: Integral t => t -> Bool
-test d = (d - 1) `mod` (d - (totient d)) == 0
-
-parFilter :: (a -> Bool) -> [a] -> [a]
-parFilter _ [] = []
-parFilter f (x:xs) =
-  let px = f x
-      pxs = parFilter f xs
-  in par px $ par pxs $ case px of True -> x : pxs
-                                   False -> pxs
+candidates = filter (<limit) $ map product $ consecutive fermats
 
 main :: IO ()
-main = do print $ length $ parFilter (test) 
-                $ takeWhile (<limit) $ drop 1 composites
+main = do print $ fermats
+          print $ consecutive fermats
+          print $ candidates
+          print $ sum candidates
+

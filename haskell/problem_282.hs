@@ -7,7 +7,7 @@
 -- 
 -- For example A(1, 0) = 2, A(2, 2) = 7 and A(3, 4) = 125.
 -- 
--- Find ∑_(0 ≤n ≤ 6) A(n, n) and give your answer mod 14^(8).
+-- Find ∑_(0 ≤ n ≤ 6) A(n, n) and give your answer mod 14^(8).
 -- 
 -- http://projecteuler.net/index.php?section=problems&id=282
 
@@ -23,22 +23,9 @@ modulus = 14 ^ 7
 a .^^. 1 = a
 a .^^. (k + 1) = powMod modulus a (a .^^. k)
 
-main :: IO ()
-main = do mapM_ print [2 .^^. n | n <- [1..1500]]
+-- A(4, 4) = 2^^7 - 3
+-- A(5, 5) = 2^^^8 - 3 = 2^^2^^2^^2^^2^^2^^2^^2 - 3
 
--- Has the following output:
--- 2731
--- 120858291
--- 224021715
--- 1149386323
--- 1295674451
--- 301775699
--- 934256723
--- 934256723
--- 934256723
--- 934256723
--- 934256723
--- 934256723
--- 934256723
--- 934256723
--- 934256723
+main :: IO ()
+main = do print $ (2 .^^. 7) - 3
+          print $ foldl1 (powMod modulus) $ take 7 $ repeat 2
