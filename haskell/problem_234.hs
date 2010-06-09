@@ -18,14 +18,46 @@
 module Main where
 
 import ONeillPrimes
+import Data.List (sort,(\\),union,intersect)
+import Misc (perfect_square)
 
+-- Brute-force methods, for testing.
+ups :: Integral t => t -> t
+ups n = head $ dropWhile (\p -> p ^ 2 < n) primes
+
+lps :: Integral t => t -> t
+lps n = last $ takeWhile (\p -> p ^ 2 <= n) primes
+
+xor :: Bool -> Bool -> Bool
+xor p q = (p && (not q)) || ((not p) && q)
+
+semidivisibles = filter (\n -> let u = ups n
+                                   l = lps n
+                               in (u /= l) && ((n `mod` u == 0) `xor` (n `mod` l == 0)))
+                        [4..]
+
+-- Clever methods, for solving.
 count (p:q:xs) = 
   let n = p ^ 2
       m = q ^ 2
-      ps = [x | x <- [n,(n+p)..m], x `mod` q /= 0]
-      qs = [y | y <- [m,(m-q)..n], y `mod` p /= 0]
-  in (length ps) + (length qs) + (count (q:xs))
-count _ = 0
+      ps = [x | x <- tail [n,(n+p)..m], x `mod` q /= 0, not $ perfect_square x]
+      qs = [y | y <- tail [m,(m-q)..n], y `mod` p /= 0, not $ perfect_square y]
+  in (sort $ (ps `union` qs) \\ (ps `intersect` qs)) ++ (count (q:xs))
+count _ = []
 
 main :: IO ()
-main = do print $ count $ takeWhile (<=37) primes
+-- main = do print $ sort $ count $ takeWhile (<=37) primes
+main = do let limit = 999966663333
+              plimit = ups limit
+              semis = takeWhile (<=limit)
+                    $ count 
+                    $ takeWhile (<=plimit) primes
+          -- mapM_ print semis
+          putStrLn $ "There are " ++ (show $ length semis) 
+                                  ++ " semidivisibles below "
+                                  ++ (show limit)
+          putStrLn $ "Their sum is " ++ (show $ sum semis)
+
+
+
+

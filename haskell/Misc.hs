@@ -3,7 +3,7 @@
 -- This is a module for miscellaneous functions that are used frequently but
 -- don't really have a good place to live.
 
-module Misc (digits, undigits, powMod) where
+module Misc (digits, undigits, powMod, (#), mergeAll, perfect_square) where
 
 import MillerRabin (powMod)
 
@@ -34,3 +34,15 @@ xs@(x:xt) # ys@(y:yt) | x < y = x : (xt # ys)
                       | x > y = y : (xs # yt)
                       | otherwise = x : (xt # yt)
 
+mergeAll :: (Ord a) => [[a]] -> [a]
+mergeAll ([] : zs) = mergeAll zs
+mergeAll (xxs@(x:xs) : yys@(y:ys) : zs)
+    | x < y = x : mergeAll (xs : yys : zs)
+    | otherwise = mergeAll ((xxs # yys) : zs)
+
+-- Divisor functions that aren't the sigma function (found in Sigma.hs)
+divisors :: Integral t => t -> [t]
+divisors n = [d | d <- [1..(n `div` 2)], n `mod` d == 0] ++ [n]
+
+-- Various numerical functions
+perfect_square n = m * m == n where m = round $ sqrt $ fromIntegral n

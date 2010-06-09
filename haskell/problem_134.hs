@@ -14,8 +14,10 @@
 module Main where
 
 import ONeillPrimes
+import Control.Parallel
+import Control.Parallel.Strategies (parZipWith, rwhnf)
 
-consecutives = takeWhile ((<1000000) . fst) $ drop 2 $ zip primes (tail primes)
+myprimes = primesToLimit 400000
 
 num_digits n = length $ show n
 
@@ -23,17 +25,22 @@ ilength :: Integral b => [a] -> b
 ilength [] = 0
 ilength (_:xs) = 1 + (ilength xs)
 
-s (p1, p2) = 
+s p1 p2 = 
   let p1l = num_digits p1
       s' m | m == p1 = 1
            | otherwise = 1 + (s' $ (m + p2) `mod` (10 ^ p1l))
   in s' 0
 
-answers = map (s) consecutives
+force :: [a] -> ()
+force xs = go xs `pseq` ()
+    where go (_:xs) = go xs
+          go [] = 1
+
+answers = drop 2 $ parZipWith rwhnf s ((force myprimes) `pseq` myprimes) ((force myprimes) `pseq` (tail myprimes))
+-- answers = drop 2 $ zipWith s (myprimes) (tail myprimes)
 
 main :: IO ()
-main = do let answers' = zip consecutives answers
-          mapM_ (print) answers'
+main = do -- mapM_ (print) answers
           print $ sum answers
 
 -- main :: IO ()

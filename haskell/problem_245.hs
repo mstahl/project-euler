@@ -32,18 +32,21 @@ import Totient
 import Data.Ratio
 import Data.List (inits,tails)
 import MillerRabin (prime)
+import Misc (mergeAll)
 
 limit = 2 * (10 ^ 11)
 
-fermats = takeWhile (<limit) $ map (\k -> 2 ^ (2 ^ k) + 1) [0..]
+fermats = map (\k -> 2 ^ (2 ^ k) + 1) [0..]
 
-consecutive = filter ((>1) . length) . concatMap (tails) . inits
+-- consecutive = filter ((>1) . length) . concatMap (tails) . inits
+consecutive = mergeAll . map (map product)
+                       . map (drop 2)   -- Sublists must be 2 links long
+                       . map (inits)
+                       . tails
 
-candidates = filter (<limit) $ map product $ consecutive fermats
+-- candidates = filter (<limit) $ map product $ take 150 $ consecutive fermats
+candidates = take 5 $ consecutive fermats
 
 main :: IO ()
-main = do print $ fermats
-          print $ consecutive fermats
-          print $ candidates
-          print $ sum candidates
+main = do print candidates
 
