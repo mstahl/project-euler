@@ -10,7 +10,9 @@
 -- this copyright message is retained and changed versions of the file
 -- are clearly marked.
 
-module ONeillPrimes (composites, primes, sieve, calcPrimes, primesToNth, primesToLimit, prime_factors, factors) where
+module ONeillPrimes (composites, primes, sieve, calcPrimes, primesToNth, primesToLimit, prime_factors, factors, prime_factors_exponents) where
+
+import Data.List (group)
 
 -- mstahl changes (github.com/mstahl)
 prime_factors :: Integral t => t -> [t]
@@ -18,6 +20,9 @@ prime_factors n = factor n primes
   where factor n (p:ps) | p > n = []
                         | n `mod` p /= 0 = factor n ps
                         | otherwise = p : factor (n `div` p) (p:ps)
+
+prime_factors_exponents :: Integral t => t -> [(t, Int)]
+prime_factors_exponents = map (\l -> (head l, length l)) . group . prime_factors
 
 factors :: Integral t => t -> [t]
 factors n = [d | d <- [1..(n `div` 2)] ++ [n]

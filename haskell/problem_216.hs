@@ -10,15 +10,31 @@
 module Main where
 
 import MillerRabin (prime)
+import ONeillPrimes (primes,prime_factors_exponents)
+import Sigma
+import Data.List (scanl1,group)
 
 perfect_square n = m * m == n where m = round $ sqrt $ fromIntegral n
 
 -- limit = 50000000
-limit = 200
+limit = 10000
 
-ns = [n | n <- [2..limit], prime $ 2 * n * n - 1]
+increasing :: Ord a => [a] -> [a]
+increasing (a:(b:xs)) | a == b = increasing (b:xs)
+                      | a < b = a : increasing (b:xs)
+                      | a > b = increasing (a:xs)
+increasing _ = []
+
+a160696 = 
+  let largest p = last $ filter (\(p, i) -> i > 1)
+                       $ prime_factors_exponents (p + 1)
+  in map largest primes
+
+ns = [n | n <- [2..limit]
+        , (sigma 1 n) `mod` (sigma 0 n) == 0
+        , perfect_square n
+        ]
 
 main :: IO ()
 main = do print $ length $ ns
-          print $ ns
 
