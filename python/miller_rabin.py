@@ -1,14 +1,6 @@
 #!/usr/bin/python
 
-# Deterministic variant
-
-#Input: n > 1, an odd integer to test for primality.
-#Output: composite if n is composite, otherwise prime
-#write n-1 as 2**s*d by factoring powers of 2 from n-1
-#repeat for all :
-#    
-#    then return composite
-#return prime
+# Deterministic variant. Works for 1 < n < 341,550,071,728,321
 
 import math
 
@@ -21,7 +13,7 @@ def prime(n):
     s = 0
     while (n - 1) % (2 ** s) == 0:
         s += 1
-    s -= 1  # Because Python doesn't have do/while loops
+    s -= 1
     d = (n - 1) / (2 ** s)
     
     for a in [2, 3, 5, 7, 11, 13, 17]:
@@ -40,4 +32,3 @@ def prime(n):
             return False
     return True
 
-# print len(filter(prime, range(2,10000)))
