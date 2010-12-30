@@ -17,8 +17,6 @@ trim0s n | n < 10 = n
          | n `mod` 10 == 0 = trim0s $ n `div` 10
          | otherwise = n
 
-next result n = (trim0s $ result * n) `mod` (10^5)
-f n = foldl1 (next) [1..n]
 
 main :: IO ()
 main = do print $ f $ 10^12

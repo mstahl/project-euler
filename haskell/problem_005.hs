@@ -12,4 +12,4 @@ divisible_by_all :: Integral t => t -> Bool
 divisible_by_all n = all (\r -> n `mod` r == 0) [2..20]
 
 main :: IO ()
-main = do print $ head $ filter (divisible_by_all) [1..]
+main = do print $ head $ filter (divisible_by_all) [20,40..]

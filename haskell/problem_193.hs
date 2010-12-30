@@ -12,14 +12,11 @@ import Data.List
 import ONeillPrimes
 import Squarefrees
 
-limit = 2 ^ 40
+limit = 2 ^ 30
 limit2 = floor . sqrt . fromIntegral $ limit
 
 mysquarefrees = takeWhile (<limit2) squarefree
 
 
-main :: IO () 
--- main = do print $ squarefrees_below limit
-main = do print $ limit2
-          mapM_ (print) mysquarefrees
-          print $ length mysquarefrees
+main :: IO ()
+main = do print $ length mysquarefrees

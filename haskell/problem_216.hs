@@ -14,27 +14,17 @@ import ONeillPrimes (primes,prime_factors_exponents)
 import Sigma
 import Data.List (scanl1,group)
 
-perfect_square n = m * m == n where m = round $ sqrt $ fromIntegral n
+import Text.Printf
 
--- limit = 50000000
-limit = 10000
+limit = 50000000
+-- limit = 10000000
 
-increasing :: Ord a => [a] -> [a]
-increasing (a:(b:xs)) | a == b = increasing (b:xs)
-                      | a < b = a : increasing (b:xs)
-                      | a > b = increasing (a:xs)
-increasing _ = []
-
-a160696 = 
-  let largest p = last $ filter (\(p, i) -> i > 1)
-                       $ prime_factors_exponents (p + 1)
-  in map largest primes
-
-ns = [n | n <- [2..limit]
-        , (sigma 1 n) `mod` (sigma 0 n) == 0
-        , perfect_square n
-        ]
+ns = filter (prime . snd) $ [(n, q) | n <- [2..limit]
+                                    , let q = 2 * (n ^ 2) - 1
+                                    ]
 
 main :: IO ()
-main = do print $ length $ ns
+main = do mapM_ (\(n, fn) -> printf "%8d -> %d\n" (n::Integer) (fn::Integer)) ns
+          putStrLn "--------------------------"
+          print $ length ns
 

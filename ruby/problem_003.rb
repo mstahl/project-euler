@@ -8,11 +8,9 @@
 
 require 'mathn'
 
-def factors(n)
-  f = []
-  (1..Math.sqrt(n)).reject do |d|
-    n % d == 0
-  end
+ps = Prime.new
+primes = []
+while (p = ps.succ) < Math.sqrt(600851475143) do
+  puts p.to_s
+  primes << p
 end
-
-p factors(13195)

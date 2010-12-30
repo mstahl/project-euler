@@ -16,29 +16,42 @@
 -- 
 -- 120 cm: (30,40,50), (20,48,52), (24,45,51)
 -- 
--- Given that L is the length of the wire, for how many values of L 1,500,000 can
+-- Given that L is the length of the wire, for how many values of L <= 1,500,000 can
 -- exactly one integer sided right angle triangle be formed?
 
 module Main where
 
-import Data.List
-import Control.Parallel
-import Control.Parallel.Strategies
+import Pythagorean
+import Data.List (group, maximumBy)
 
-triangles = [perimeter | n <- [2..1000]
-                       , m <- [1..(n - 1)]
-                       , gcd m n == 1
-                       , odd (m + n)
-                       , let perimeter = 2 * (n^2 + m*n)
-                       , perimeter <= 2 * 10^6
-                       ]
+solutions = filter ((==1).snd) $ map (\x:xs -> (x, length (x:xs)))
+                               $ group
+                               $ takeWhile (<=1500000)
+                               $ map (fst) alltriples
 
-all_triangles = concatMap (\p -> takeWhile (<1500000) $ map (*p) [1..]) triangles
-
-uniques :: Integral t => [t] -> [t]
-uniques = map (head) . filter (\l -> length l == 1)
-                     . group
-                     . sort
 
 main :: IO ()
-main = do print $ length $ uniques $ all_triangles
+main = do mapM_ (print) solutions
+          print $ length solutions
+
+
+-- A much more clever solution from http://www.haskell.org/haskellwiki/Euler_problems/71_to_80#Problem_75
+-- 
+-- import Data.Array
+--  
+-- triangs :: [Int]
+-- triangs = [p | n <- [2..1000],
+--                m <- [1..n-1],
+--                gcd m n == 1,
+--                odd (m+n),
+--                let p = 2 * (n^2 + m*n),
+--                p <= 2*10^6]
+--  
+-- problem_75 :: Int
+-- problem_75 = length
+--        $ filter (\(_, c) -> c == 1)
+--        $ assocs
+--        $ (\ns -> accumArray (+) 0 (1, 2*10^6) [(n, 1) | n <- ns, inRange (1, 2*10^6) n])
+--        $ concatMap (\n -> takeWhile (<=2*10^6) [n,2*n..]) triangs
+-- 
+-- main = do print problem_75

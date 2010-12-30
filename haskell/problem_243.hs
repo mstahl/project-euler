@@ -25,4 +25,5 @@ main :: IO ()
 main = do print $ fst 
                 $ head 
                 $ dropWhile (\(_, r) -> r >= 15499 % 94744)
-                $ [(d, resilience d) | d <- drop 1 composites]
+                $ map (\d -> (d, resilience d)) [2..]
+

@@ -7,23 +7,21 @@
 -- digits are formed by p_(1) and n is divisible by p_(2). Let S be the smallest
 -- of these values of n.
 -- 
--- Find ∑ S for every pair of consecutive primes with 5 ≤ p_(1) ≤ 1000000.
+-- Find ∑ S for every pair of consecutive primes with 5 ≤ p_(1) ≤ 10^6.
 -- 
 -- http://projecteuler.net/index.php?section=problems&id=134
 
 module Main where
 
 import ONeillPrimes
-import Control.Parallel
-import Control.Parallel.Strategies (parZipWith, rwhnf)
+import Text.Printf
 
-myprimes = primesToLimit 400000
+import Control.Parallel
+import Control.Parallel.Strategies
+
+myprimes = primesToLimit $ 100000
 
 num_digits n = length $ show n
-
-ilength :: Integral b => [a] -> b
-ilength [] = 0
-ilength (_:xs) = 1 + (ilength xs)
 
 s p1 p2 = 
   let p1l = num_digits p1
@@ -31,17 +29,9 @@ s p1 p2 =
            | otherwise = 1 + (s' $ (m + p2) `mod` (10 ^ p1l))
   in s' 0
 
-force :: [a] -> ()
-force xs = go xs `pseq` ()
-    where go (_:xs) = go xs
-          go [] = 1
-
-answers = drop 2 $ parZipWith rwhnf s ((force myprimes) `pseq` myprimes) ((force myprimes) `pseq` (tail myprimes))
+answers = drop 2 $ parZipWith rwhnf s (myprimes) (tail myprimes)
 -- answers = drop 2 $ zipWith s (myprimes) (tail myprimes)
 
 main :: IO ()
-main = do -- mapM_ (print) answers
+main = do -- mapM_ (\(i, a) -> printf "%8d: %d\n" (i::Int) (a::Integer)) $ zip myprimes answers
           print $ sum answers
-
--- main :: IO ()
--- main = do print $ sum answers

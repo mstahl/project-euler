@@ -5,7 +5,7 @@
 # 
 # Find the sum of all the multiples of 3 or 5 below 1000.
 
-threes = (1..(1000 / 3 - 1)).map {|t| 3 * t}.reject {|t| t % 5 == 0}
+threes = (1..(1000 / 3)).map {|t| 3 * t}.reject {|t| t % 5 == 0}
 fives = (1..(1000 / 5 - 1)).map {|f| 5 * f}
 
 p threes

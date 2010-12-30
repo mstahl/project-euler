@@ -3,9 +3,17 @@
 -- This is a module for miscellaneous functions that are used frequently but
 -- don't really have a good place to live.
 
-module Misc (digits, undigits, powMod, (#), mergeAll, perfect_square) where
+module Misc (parFilter, digits, undigits, powMod, (#), mergeAll, perfect_square, factorial, divisors) where
 
 import MillerRabin (powMod)
+import Control.Parallel
+import Control.Parallel.Strategies
+import Data.Maybe
+
+parFilter :: (a -> Bool) -> [a] -> [a]
+parFilter f = catMaybes . parMap rwhnf (\n -> if f n
+                                              then Just n
+                                              else Nothing)
 
 digits :: Integral t => t -> [t]
 digits n
@@ -35,10 +43,11 @@ xs@(x:xt) # ys@(y:yt) | x < y = x : (xt # ys)
                       | otherwise = x : (xt # yt)
 
 mergeAll :: (Ord a) => [[a]] -> [a]
-mergeAll ([] : zs) = mergeAll zs
-mergeAll (xxs@(x:xs) : yys@(y:ys) : zs)
-    | x < y = x : mergeAll (xs : yys : zs)
-    | otherwise = mergeAll ((xxs # yys) : zs)
+-- mergeAll ([] : zs) = mergeAll zs
+-- mergeAll (xxs@(x:xs) : yys@(y:ys) : zs)
+--     | x < y = x : mergeAll (xs : yys : zs)
+--     | otherwise = mergeAll ((xxs # yys) : zs)
+mergeAll = foldl1 (#)
 
 -- Divisor functions that aren't the sigma function (found in Sigma.hs)
 divisors :: Integral t => t -> [t]
@@ -46,3 +55,5 @@ divisors n = [d | d <- [1..(n `div` 2)], n `mod` d == 0] ++ [n]
 
 -- Various numerical functions
 perfect_square n = m * m == n where m = round $ sqrt $ fromIntegral n
+factorial n | n < 2 = 1
+            | otherwise = n * (factorial (n - 1))

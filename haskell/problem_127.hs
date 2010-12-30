@@ -25,24 +25,44 @@
 module Main where
 
 import ONeillPrimes
-import Data.List (nub, group)
+import Data.List (nub, group, sort)
 
-hits :: Integral t => [(t, t, t)]
-hits = [(a, b, c) | b <- [2..1000]
-                  , a <- [1..(1000 - b)]
-                  , let c = a + b
-                  , c < 1000
-                  , a `gcd` b == 1
-                  , a `gcd` c == 1
-                  , b `gcd` c == 1
-                  , (product $ concatMap (nub . prime_factors) [a, b, c]) < c
-                  ]
+import Data.Array.IArray
+import Data.Array.Unboxed
 
-cs :: Integral t => [t]
-cs = map (\(_, _, c) -> c) hits
+snub :: Eq t => [t] -> [t]
+snub (x1:x2:xs) | x1 == x2 = snub (x2:xs)
+                | x1 /= x2 = x1:snub (x2:xs)
+snub [x1] = [x1]
+snub _ = []
+
+limit :: Integral t => t
+limit = 120000 - 1
+
+-- Memoized radical function
+rad :: (Integral t) => t -> t
+rad = product . nub . prime_factors
+
+rads :: UArray Int Int
+rads = listArray (1, limit) $ map (rad) [1..limit]
+
+-- inverse_rads :: [(Int, Int)]
+inverse_rads = sort $ map (\(a, b) -> (b, a)) $ assocs rads
+
+-- hits :: (Integral t, Ix t) => [(t, t, t)]
+hits = [c | (rc, c) <- inverse_rads
+          , 2 * rc < c
+          , (ra, a) <- takeWhile (\(a, _)->(c > 2 * rc * a)) inverse_rads
+          , a < c `div` 2
+          , gcd ra rc == 1
+          , ra * rads ! (c - a) < c `div` rc
+          ]
+-- Above section borrowed from http://www.haskell.org/haskellwiki/Euler_problems/121_to_130#Problem_127
+
 
 main :: IO ()
-main = do -- mapM_ (print) cs
-          -- print $ length cs
-          print $ sum cs
+main = do mapM_ (print) hits
+          putStrLn $ "Num hits: " ++ (show $ length hits)
+          putStrLn $ "Sum:      " ++ (show $ sum hits)
+
 

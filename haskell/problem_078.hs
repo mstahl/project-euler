@@ -27,7 +27,7 @@ pentagonals =
   in map (p) indices
 
 partitions = 
-  let p 0 = 0
+  let p 0 = 1 d
       p 1 = 1
       p k = 
         let terms = map (\p -> partitions (k - p)) $ takeWhile (<k) pentagonals
@@ -36,4 +36,4 @@ partitions =
   in ((Array.array (0,limit) [(k, p k) | k <- [0..limit]]) !)
 
 main :: IO ()
-main = do print $ head $ filter (\k -> (partitions k) `mod` limit == 0) [1..]
+main = do print $ head $ filter (\k -> (partitions k) `mod` limit == 0) [2..]

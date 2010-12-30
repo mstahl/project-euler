@@ -23,6 +23,10 @@ module Main where
 
 import Data.Ratio
 import Data.List
+import Data.Maybe
+
+import Control.Parallel
+import Control.Parallel.Strategies
 
 is_geometric :: Integral t => t -> t -> Bool
 is_geometric n d = let (q, r) = divMod n d
@@ -32,8 +36,37 @@ is_geometric n d = let (q, r) = divMod n d
 is_progressive :: Integral t => t -> Bool
 is_progressive n = any (is_geometric n) [2..(floor . sqrt . fromIntegral $ n)]
 
+-- limit = 10**12
+limit = 10**8
+
+parFilter :: (a -> Bool) -> [a] -> [a]
+parFilter f = catMaybes . parMap rwhnf (\n -> if f n
+                                              then Just n
+                                              else Nothing)
+
 main :: IO ()
-main = do let squares = map (^2) [1..(10^6)]
-              progressives = filter (is_progressive) squares
-          mapM_ (print) progressives
-          print $ sum progressives
+main = do let squares = map (^2) [1..(floor $ sqrt $ limit)]
+              progressives = parFilter is_progressive squares
+          -- mapM_ (print) progressives
+          print $ sum $! progressives
+
+
+
+
+----------------------------------------------------------------
+-- Some test code
+----------------------------------------------------------------
+
+-- import Data.Maybe
+-- import Control.Parallel.Strategies
+-- import Control.Parallel
+-- 
+-- factors n = let candidates = [2..floor (sqrt (fromInteger n))]
+--             in catMaybes $ map (\x ->
+--                                       if n `mod` x == 0
+--                                       then Just (x, n `div` x)
+--                                       else Nothing) candidates
+-- bigNums = [2000000000000..]
+-- answer = (parMap rwhnf) (length . factors) (take 10 bigNums)
+-- 
+-- main = print answer
