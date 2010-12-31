@@ -7,18 +7,7 @@
 # 
 # http://projecteuler.net/index.php?section=problems&id=1
 
-def merge(a, b):
-    """Merges two nondecreasing lists into one big nondecreasing list."""
-    if len(a) == 0:
-        return b
-    elif len(b) == 0:
-        return a
-    elif a[0] < b[0]:
-        return [a[0]] + merge(a[1:], b)
-    elif a[0] > b[0]:
-        return [b[0]] + merge(a, b[1:])
-    else:
-        return [a[0]] + merge(a[1:], b[1:])
+from euler import merge
 
 # print merge([2,4,6,8], [1,3,5,7])
 # print merge([1,3,5,7], [2,4,6,8])

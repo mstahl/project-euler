@@ -50,10 +50,7 @@ n = ('73167176531330624919225119674426574742355349194934' +
     '71636269561882670428252483600823257530420752963450')
 
 def product(l):
-    if len(l) == 0:
-        return 1
-    else:
-        return l[0] * product(l[1:])
+    return foldl1(lambda a, b: a * b, l)
 
 products = [product(map(int, list(n[i:i+5]))) for i in range(len(n))]
 print max(products)
