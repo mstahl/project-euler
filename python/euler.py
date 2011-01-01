@@ -1,6 +1,22 @@
 
 
+def factorial(n):
+    if n < 2:
+        return 1
+    else:
+        return n * factorial(n - 1)
 
+def fibonaccis():
+    """Generating function for Fibonacci numbers."""
+    f1 = 1
+    yield f1
+    f2 = 1
+    yield f2
+    
+    while True:
+        f3 = f1 + f2
+        yield f3
+        (f1, f2) = (f2, f3)
 
 def digits(n):
     if n == 0:
