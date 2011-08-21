@@ -22,10 +22,11 @@ module Main where
 import Data.List
 
 seq_length :: Integral t => t -> Int
-seq_length n = 
-  let next n | even n = n `div` 2
-             | otherwise = 3 * n + 1
-  in 1 + (length $ takeWhile (>1) $ iterate (next) n)
+seq_length = 
+  let next n | n == 1 = Nothing
+             | even n = Just(n, n `div` 2)
+             | otherwise = Just(n, 3 * n + 1)
+  in length . unfoldr next
 
 main :: IO ()
 main = do print $ fst $ maximumBy (\a b -> compare (snd a) (snd b))
