@@ -15,17 +15,15 @@ import Misc (mergeAll,(#))
 
 -- n = 20000000
 -- k = 15000000
-n = 20000
-k = 15000
+n = 200000
+k = 150000
 
-numerator = sort $ concatMap (prime_factors) [(n - k + 1)..n]
-denominator = sort $ concatMap (prime_factors) [1..k]
--- numerator = prime_factors $ product [(n - k + 1)..n]
--- denominator = prime_factors $ product [1..k]
+numerator = concatMap (prime_factors) [(n - k + 1)..n]
+denominator = concatMap (prime_factors) [1..k]
 
 (\\\) :: Ord t => [t] -> [t] -> [t]
 a@(x:xs) \\\ b@(y:ys) | x < y = x : (xs \\\ b)
-                      | x > y = y : (ys \\\ a)
+                      | x > y = y : (a \\\ ys)
                       | x == y = x : y : (xs \\\ ys)
 _ \\\ [] = []
 [] \\\ _ = []
@@ -37,13 +35,4 @@ choose :: Integral t => t -> t -> t
 n `choose` k = (fact n) `div` ((fact k) * (fact (n - k)))
 
 main :: IO ()
--- main = do print $ sum $ numerator \\ denominator
-main = do -- print numerator
-          -- putStrLn "*********************"
-          -- print denominator
-          -- putStrLn "*********************"
-          print $ sum $ numerator \\ denominator
-          -- print $ product $ numerator \\ denominator
-          -- print $ n `choose` k
-
-          -- print $ numerator `div` denominator
+main = do print $ sum $ numerator \\ denominator

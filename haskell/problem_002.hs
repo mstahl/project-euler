@@ -10,8 +10,12 @@
 
 module Main where
 
-fibonaccis :: (Integral t) => [t]
+fibonaccis :: Integral t => [t]
 fibonaccis = 1 : 1 : zipWith (+) fibonaccis (tail fibonaccis)
 
 main :: IO ()
-main = do print $ sum $ filter (even) $ takeWhile (<4000000) fibonaccis
+main = do let even_fibonaccis = takeWhile (<4000000)
+                              $ filter even fibonaccis
+          print $ sum even_fibonaccis
+
+

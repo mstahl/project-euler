@@ -16,8 +16,9 @@ import Data.List (scanl1,group)
 
 import Text.Printf
 
-limit = 50000000
+-- limit = 50000000
 -- limit = 10000000
+limit = 10000
 
 ns = filter (prime . snd) $ [(n, q) | n <- [2..limit]
                                     , let q = 2 * (n ^ 2) - 1

@@ -50,6 +50,6 @@ squarefrees_below n =
             then 1
             else (-1)
       limit = floor . sqrt . fromIntegral $ n
-      counts = parMap rwhnf (\q -> (m q) * (n `div` (q ^ 2)))
+      counts = parMap rpar (\q -> (m q) * (n `div` (q ^ 2)))
              $ takeWhile (<=limit) squarefree
   in n + (sum counts)

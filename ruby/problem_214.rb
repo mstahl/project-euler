@@ -22,6 +22,23 @@
 # What is the sum of all primes less than 40000000 which generate a chain of
 # length 25?
 
-def totient(n)
-  
+require 'mathn'
+require './Totient.rb'
+
+def chainlength(n)
+  l = 1
+  m = n
+  until m == 1 do
+    m = totient m
+    l += 1
+  end
+  l
 end
+
+sum = 0
+Prime.each do |p|
+  break if p >= 40000000
+  
+  sum += p if chainlength(p) == 25
+end
+puts sum

@@ -14,12 +14,14 @@ combinationsOf 0 _ = [[]]
 combinationsOf _ [] = []
 combinationsOf k (x:xs) = map (x:) (combinationsOf (k-1) xs) ++ combinationsOf k xs
 
-combinations k n = combinationsOf k [1..n]
+-- combinations k n = combinationsOf k [1..n]
 
-n `choose` k = length $ combinations k n
+factorial n | n < 2 = 1
+            | otherwise = n * (factorial (n - 1))
 
+n `combinations` k = (factorial n) `div` ((factorial k) * (factorial (n - k)))
 
-permutations n = permutationsOf [1..n]
+n `permutations` k = (factorial n) `div` (factorial (n - k))
 
 permutationsOf [] = [[]]
 permutationsOf xs = [x:xs' | x <- xs, xs' <- permutationsOf (delete x xs)]

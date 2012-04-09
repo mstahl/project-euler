@@ -23,6 +23,9 @@ module Main where
 
 import Data.List ((\\))
 
+import Control.Parallel
+import Control.Parallel.Strategies
+
 abundant :: Integral t => t -> Bool
 abundant n = 
   let s = sum [d | d <- [1..(n `div` 2)], n `mod` d == 0]

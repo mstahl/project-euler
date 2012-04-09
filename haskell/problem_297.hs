@@ -16,19 +16,30 @@
 -- 
 -- Also, for 0<n<10^(6), ∑ z(n) = 7894453.
 -- 
--- Find ∑ z(n) for 0<n<10^(17).
+-- Find ∑ z(n) for 0 < n < 10^(17).
 -- 
 -- http://projecteuler.net/index.php?section=problems&id=297
 
 module Main where
 
+import Control.Parallel
+import Control.Parallel.Strategies
+
+fibonaccis :: [Integer]
 fibonaccis = 1 : 2 : zipWith (+) fibonaccis (tail fibonaccis)
 
-z 0 = 0
-z n = 1 + (z (n - f))
-      where f = last $ takeWhile (<=n) fibonaccis
+zeckendorf :: Integer -> [Integer]
+zeckendorf n = 
+  let fibs       = reverse $ takeWhile (<=n) fibonaccis
+      z _ 0      = []
+      z (x:xs) n | x > n     = z xs n
+                 | otherwise = x : z (xs) (n - x)
+  in z fibs n
 
-limit = (10 ^ 8) - 1
+limit = (10 ^ 17) - 1
 
 main :: IO ()
-main = do print $ sum [z n | n <- [1..limit]]
+main = do print $ sum 
+                $ parBuffer 16 rwhnf 
+                $ map (length . zeckendorf) [1..limit]
+-- main = do print $ zeckendorf limit

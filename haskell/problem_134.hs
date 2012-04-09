@@ -13,25 +13,27 @@
 
 module Main where
 
+import Data.List (isSuffixOf)
+
 import ONeillPrimes
 import Text.Printf
 
 import Control.Parallel
 import Control.Parallel.Strategies
 
-myprimes = primesToLimit $ 100000
+myprimes = primesToLimit $ 1000000
 
 num_digits n = length $ show n
 
-s p1 p2 = 
-  let p1l = num_digits p1
-      s' m | m == p1 = 1
-           | otherwise = 1 + (s' $ (m + p2) `mod` (10 ^ p1l))
-  in s' 0
+s p1 p2 = head $ dropWhile (\x -> not $ isSuffixOf (show p1) (show x)) 
+               $ iterate (+p2) (p2 * (p2 `div` p1))
 
-answers = drop 2 $ parZipWith rwhnf s (myprimes) (tail myprimes)
--- answers = drop 2 $ zipWith s (myprimes) (tail myprimes)
+-- answers = drop 2 $ parZipWith rwhnf s (myprimes) (tail myprimes)
+answers = drop 2 $ zipWith s (myprimes) (tail myprimes)
 
 main :: IO ()
-main = do -- mapM_ (\(i, a) -> printf "%8d: %d\n" (i::Int) (a::Integer)) $ zip myprimes answers
+main = do print $ length myprimes
+          mapM_ (print) answers
+          putStrLn "------------------------------"
           print $ sum answers
+

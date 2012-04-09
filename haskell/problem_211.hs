@@ -12,9 +12,15 @@ module Main where
 
 import Sigma
 
+import Control.Parallel
+import Control.Parallel.Strategies
+
 perfect_square :: Integral t => t -> Bool
 perfect_square n = (round . sqrt . fromIntegral $ n) ^ 2 == n
 
 main :: IO ()
 -- main = do print $ sum $ filter (perfect_square) $ map (sigma 2) [1..63999999]
-main = do print $ sum $ filter (perfect_square) $ map (sigma 2) [1..999999]
+main = do print $ sum 
+                $ filter (perfect_square) 
+                $ parBuffer 16 rwhnf
+                $ map (sigma 2) [1..999999]

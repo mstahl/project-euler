@@ -28,17 +28,34 @@
 
 module Main where
 
-import Data.List (isPrefixOf)
+import Data.List (isPrefixOf, unfoldr)
+import Data.Maybe
+import Control.Parallel
+import Control.Parallel.Strategies
 
-a 1 = ""
-a n = case n `mod` 3 of
-        0 -> 'D':(a (n `div` 3))
-        1 -> 'U':(a ((4 * n + 2) `div` 3))
-        2 -> 'd':(a ((2 * n - 1) `div` 3))
+a :: Integral t => t -> String
+a n = 
+  let a' 1 = Nothing
+      a' m = case m `mod` 3 of
+               0 -> Just('D', m `div` 3)
+               1 -> Just('U', (4 * m + 2) `div` 3)
+               2 -> Just('d', (2 * m - 1) `div` 3)
+  in unfoldr a' n
+
+
+parFilter strategy buffsize fn = 
+  catMaybes . runEval 
+            . parBuffer buffsize strategy 
+            . map (\n -> if fn n then Just(n) else Nothing)
 
 main :: IO ()
-main = do print $ head $ [n | n <- [(10^15 + 1)..]
-                            , let q = take 30 $ a n
-                            , "UDDDUdddDDUDDddDdDddDD" `isPrefixOf` q
-                            -- , "DdDddUUdDD" `isPrefixOf` q
-                            ]
+-- main = do print $ head 
+--                 $ parFilter rpar 4096 (\n -> isPrefixOf "DdDddUUdDD" $ take 30 $ a n)
+--                 $ [(10^6 + 1)..]
+
+main = do print $ head 
+                $ parFilter rpar 4096 (\n -> isPrefixOf "UDDDUdddDDUDDddDdDddDD" $ take 30 $ a n)
+                $ [(10^15 + 1)..]
+
+
+
