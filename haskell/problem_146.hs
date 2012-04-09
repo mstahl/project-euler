@@ -14,7 +14,7 @@ import ONeillPrimes (primes)
 perfect_square :: Integral t => t -> Bool
 perfect_square n = m * m == n where m = floor . sqrt . fromIntegral $ n
 
-test n = [m + 1, m + 3, m + 7, m + 9, m + 13, m + 27] == filter (prime) [(m + 1)..(m + 27)]
+test n = [m + 1, m + 3, m + 7, m + 9, m + 13, m + 27] == (takeWhile (<=(m + 27)) $ dropWhile (<(m + 1)) primes)
          where m = n * n
 
 ns (a:b:c:d:e:f:xs) = 
@@ -23,4 +23,4 @@ ns (a:b:c:d:e:f:xs) =
   else ns (b:c:d:e:f:xs)
 
 main :: IO ()
-main = do mapM_ (print) $ take 5 $ ns primes
+main = do mapM_ (print) $ take 1 $ ns primes
