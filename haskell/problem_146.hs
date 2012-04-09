@@ -18,9 +18,10 @@ test n = [m + 1, m + 3, m + 7, m + 9, m + 13, m + 27] == (takeWhile (<=(m + 27))
          where m = n * n
 
 ns (a:b:c:d:e:f:xs) = 
-  if ((==1) $ length $ [a - 1, b - 3, c - 7, d - 9, e - 13, f - 27]) && perfect_square (a - 1)
+  if all (perfect_square) [a - 1, b - 3, c - 7, d - 9, e - 13, f - 27]
   then (floor $ sqrt $ fromIntegral $ a - 1) : ns (b:c:d:e:f:xs)
   else ns (b:c:d:e:f:xs)
 
 main :: IO ()
-main = do mapM_ (print) $ take 1 $ ns primes
+main = do mapM_ (print) $ take 2 $ ns primes
+
