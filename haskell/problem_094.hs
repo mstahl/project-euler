@@ -29,3 +29,4 @@ main :: IO ()
 main = do mapM_ print almosts
           putStrLn "----------"
           print $ sum almosts
+

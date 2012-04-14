@@ -14,9 +14,15 @@ require "pp"
 
 class FleaCircus
   attr_reader :grid
+  attr_reader :fleas
   
   def initialize(size = 30)
     @grid = [[1] * size] * size
+    @grid.map{|row|
+      row.map{|col|
+        Flea.new
+      }
+    }
   end
   
   def empty_spaces
