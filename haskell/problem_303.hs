@@ -18,4 +18,4 @@ f :: Integral t => t -> t
 f n = head $ filter (all (<=2) . digits . (*n)) [1..]
 
 main :: IO ()
-main = do print $ sum $ map f [1..10000]
+main = do print $ sum $ map f [1..1000]
