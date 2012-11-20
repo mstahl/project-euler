@@ -10,22 +10,27 @@
 module Main where
 
 import MillerRabin (prime)
-import ONeillPrimes (primes,prime_factors_exponents)
 import Sigma
-import Data.List (scanl1,group)
+import Data.List (scanl1, group)
+import Data.Maybe
+
+import Control.Parallel.Strategies
 
 import Text.Printf
 
 -- limit = 50000000
--- limit = 10000000
-limit = 10000
+limit = 50000000
 
-ns = filter (prime . snd) $ [(n, q) | n <- [2..limit]
-                                    , let q = 2 * (n ^ 2) - 1
-                                    ]
+parFilter f = catMaybes . runEval 
+                        . parBuffer 4096 rpar
+                        . map (\x -> if (f x) then Just x else Nothing)
+
+ns = parFilter (prime . snd) $ [(n, q) | n <- [2..limit]
+                                       , let q = 2 * (n ^ 2) - 1
+                                       ]
 
 main :: IO ()
-main = do mapM_ (\(n, fn) -> printf "%8d -> %d\n" (n::Integer) (fn::Integer)) ns
-          putStrLn "--------------------------"
+main = do --mapM_ (\(n, fn) -> printf "%8d -> %d\n" (n::Integer) (fn::Integer)) ns
+          --putStrLn "--------------------------"
           print $ length ns
 

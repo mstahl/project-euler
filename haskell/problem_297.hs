@@ -39,7 +39,8 @@ zeckendorf n =
 limit = (10 ^ 17) - 1
 
 main :: IO ()
-main = do print $ sum 
-                $ parBuffer 16 rwhnf 
-                $ map (length . zeckendorf) [1..limit]
--- main = do print $ zeckendorf limit
+main = do let z = length . zeckendorf
+          print $ sum 
+                $ map z [0..limit]
+
+

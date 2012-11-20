@@ -37,18 +37,20 @@ is_progressive :: Integral t => t -> Bool
 is_progressive n = any (is_geometric n) [2..(floor . sqrt . fromIntegral $ n)]
 
 -- limit = 10**12
-limit = 10**8
+limit = 10**10
 
 parFilter :: (a -> Bool) -> [a] -> [a]
-parFilter f = catMaybes . parMap rwhnf (\n -> if f n
-                                              then Just n
-                                              else Nothing)
+parFilter f = catMaybes . runEval 
+                        . parBuffer 4096 rpar
+                        . map (\n -> if f n
+                                     then Just n
+                                     else Nothing)
 
 main :: IO ()
 main = do let squares = map (^2) [1..(floor $ sqrt $ limit)]
               progressives = parFilter is_progressive squares
-          -- mapM_ (print) progressives
-          print $ sum $! progressives
+          mapM_ (print) progressives
+          -- print $ sum $ progressives
 
 
 

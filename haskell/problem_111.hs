@@ -33,10 +33,24 @@
 
 module Main where
 
-import ONeillPrimes
+-- import ONeillPrimes
+-- 
+-- n_digit_primes n = let lower = 10 ^ (n - 1)
+--                        upper = 10 ^ n - 1
+--                    in dropWhile (<lower) $ takeWhile (<upper) primes
+
+import Control.Parallel.Strategies
+import Data.Maybe
+import MillerRabin
 
 n_digit_primes n = let lower = 10 ^ (n - 1)
                        upper = 10 ^ n - 1
-                   in dropWhile (<lower) $ takeWhile (<upper) primes
+                   in runEval $ parBuffer 4096 rpar 
+                              $ catMaybes
+                              $ map (\q -> if prime q then Just q else Nothing) [lower..upper]
 
-main = do print $ length $ n_digit_primes 10
+main :: IO ()
+main = do mapM_ print $ n_digit_primes 10
+
+
+
