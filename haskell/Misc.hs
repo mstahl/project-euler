@@ -9,8 +9,7 @@ import MillerRabin (powMod)
 import Control.Parallel
 import Control.Parallel.Strategies
 import Data.Maybe
-import List (delete)
-import Data.List (nub, sort)
+import Data.List (nub, sort, delete)
 
 parFilter :: (a -> Bool) -> [a] -> [a]
 parFilter f = catMaybes . runEval 

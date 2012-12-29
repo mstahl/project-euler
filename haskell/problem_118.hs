@@ -9,20 +9,36 @@
 
 module Main where
 
+import Control.Parallel
+import Control.Parallel.Strategies
+
+import Combinatorics
+import Misc
+import MillerRabin (prime)
 import ONeillPrimes
-import Data.List ((\\))
-import Misc (digits)
+import Data.List
 
-import Combinatorics (permutations)
+seed = "123456789"
 
-set ds (p:ps) | length (digits p) > length ds = 0                       -- No more than 9 digits
-              | ds == [] = 1                                            -- If we've used up all 9, we have a set
-              | 0 `elem` (digits p) = set ds ps                         -- No zeros allowed
-              | ((digits p) \\ ds) /= [] = set ds ps
-              | otherwise = (set (ds \\ (digits p)) ps) + (set ds ps)
-set _ [] = 0
+empty [] = True
+empty _ = False
+
+setify str (p:ps) = (take p str) : setify (drop p str) ps
+setify _ _ = []
+
+non_unique_partitions = nub . foldl1 (++) . map (permutationsOf) . partitions
+
+sets_of x = let x'    = (show x)::String
+                parts = non_unique_partitions $ length seed
+            in map (map (\q -> (read q)::Integer)) $ map (setify x') parts
+
+prime_sets_of :: Integer -> [[Integer]]
+prime_sets_of = filter (all prime) . sets_of
 
 main :: IO ()
--- main = do print $ set [1..3] $ take 5 primes
--- main = do print $ length $ permutations 9
-main = do print $ length $ primesToLimit 98765432
+main = do print $ sum
+                $ runEval
+                $ parBuffer 4096 rseq
+                $ map (length . prime_sets_of) 
+                $ map (\q -> (read q)::Integer)
+                $ permutationsOf seed

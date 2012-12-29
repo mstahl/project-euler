@@ -1,5 +1,5 @@
 -- For any positive integer n the function next_prime(n) returns the smallest
--- prime p such that pn.
+-- prime p such that p > n.
 -- 
 -- The sequence a(n) is defined by: a(1)=next_prime(1014) and
 -- a(n)=next_prime(a(n-1)) for n > 1.
@@ -17,24 +17,16 @@ module Main where
 
 import ONeillPrimes
 
-memoized f = 
-  let memo = 
-  ((map f [0..]) !!)
+next_prime n = head $ dropWhile (<n) primes
 
-next_prime n = head $ dropWhile (<n) $ primes
+fib =
+  let fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+  in (fibs !!)
 
--- addMod m a b = ((a `mod` m) + (b `mod` m)) `mod` m
--- 
--- a n | n == 1 = 2019                        -- => next_prime 1014
---     | otherwise = next_prime $ a $ n - 1
--- 
--- seq_a = 2019 : 
--- 
-fib n | n == 0 = 0
-      | n == 1 = 1
-      | otherwise = (fib (n - 1)) + (fib (n - 2))
+a 1 = 10 ^ 14
+a n = next_prime $ a (n - 1)
 
-memfib = memoized fib
+a_seq = iterate next_prime 1019
 
 main :: IO ()
-main = do print $ memfib 100
+main = do print $ next_prime $ 10 ^ 14

@@ -18,18 +18,12 @@ import Data.List (isSuffixOf)
 import ONeillPrimes
 import Text.Printf
 
-import Control.Parallel
-import Control.Parallel.Strategies
-
-myprimes = primesToLimit $ 1000000
-
-num_digits n = length $ show n
+myprimes = drop 2 $ primesToLimit $ 1000000
 
 s p1 p2 = head $ dropWhile (\x -> not $ isSuffixOf (show p1) (show x)) 
                $ iterate (+p2) (p2 * (p2 `div` p1))
 
--- answers = drop 2 $ parZipWith rwhnf s (myprimes) (tail myprimes)
-answers = drop 2 $ zipWith s (myprimes) (tail myprimes)
+answers = zipWith s (myprimes) (tail myprimes)
 
 main :: IO ()
 main = do print $ length myprimes
