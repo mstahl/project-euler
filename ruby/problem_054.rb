@@ -33,85 +33,17 @@
 # 
 # How many hands does Player 1 win?
 
+require 'the_gambler'
 require 'pp'
-
-# class Fixnum
-#   @@suits = %w{S C H D}
-#   
-#   def suit
-#     @@suits[self // 13]
-#   end
-#   
-#   def rank
-#     case @@ranks[self % 13]
-#     when 10
-#       'T'
-#     when 11
-#       'J'
-#     when 12
-#       'Q'
-#     when 13
-#       'K'
-#     when 1
-#       'A'
-#     else
-#       @@ranks[self % 13].to_s
-#     end
-#   end
-# end
-
-class String
-  def card
-    value = 0
-    self =~ /^([2-9TJQKA])([SCHD])$/i
-    case $1.upcase
-    when 'T'
-      value += 10
-    when 'J'
-      value += 11
-    when 'Q'
-      value += 12
-    when 'K'
-      value += 13
-    when 'A'
-      value += 1
-    else
-      value += $1.to_i
-    end
-    case $2.upcase
-    when 'S'
-      value += 13 * 0
-    when 'C'
-      value += 13 * 1
-    when 'H'
-      value += 13 * 2
-    when 'D'
-      value += 13 * 3
-    end
-    
-    value
-  end
-end
-
-def rank(hand)
-  # Returns a tuple, sorta, of the hand's rank, the rank(s) of the cards in the
-  # formation of the hand, and the highest card in the hand.
-  hand_rank = 0
-end
 
 player1_wins = 0
 
-IO.readlines('data/poker.txt').map {|x|
-  x.split.map {|y|
-    y.card
-  }
-}.map {|y|
-  [y[0..4], y[5..10]]
-}.each {|row|
-  player1 = row[0]
-  player2 = row[1]
-  if rank(player1) > rank(player2) then
-    player1_wins += 1
-  end
-}
+IO.readlines('data/poker.txt').map! do |line|
+  player1 = TheGambler::Hand.new(*line[0..14].gsub(/T/, '10').strip.split(/\s+/))
+  player2 = TheGambler::Hand.new(*line[15..-1].gsub(/T/, '10').strip.split(/\s+/))
+
+  player1_wins += 1 if player1.poker_value > player2.poker_value
+end
+
+p player1_wins
 
