@@ -3,20 +3,18 @@
 -- This is a module for miscellaneous functions that are used frequently but
 -- don't really have a good place to live.
 
-module Misc (parFilter, digits, undigits, powMod, (#), mergeAll, perfect_square, factorial, divisors, choices) where
+module Misc (digits, undigits, powMod, (#), mergeAll, perfect_square, factorial, divisors, choices) where
 
 import MillerRabin (powMod)
-import Control.Parallel
-import Control.Parallel.Strategies
 import Data.Maybe
 import Data.List (nub, sort, delete)
 
-parFilter :: (a -> Bool) -> [a] -> [a]
-parFilter f = catMaybes . runEval 
-                        . parBuffer 4096 rpar
-                        . map (\n -> if f n
-                                     then Just n
-                                     else Nothing)
+{- parFilter :: (a -> Bool) -> [a] -> [a] -}
+{- parFilter f = catMaybes . runEval  -}
+                        {- . parBuffer 4096 rpar -}
+                        {- . map (\n -> if f n -}
+                                     {- then Just n -}
+                                     {- else Nothing) -}
 
 digits :: Integral t => t -> [t]
 digits n

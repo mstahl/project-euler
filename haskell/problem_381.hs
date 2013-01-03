@@ -1,25 +1,28 @@
 module Main where
 
+import Data.List
 import Control.Parallel
 import Control.Parallel.Strategies
-import ONeillPrimes (primes)
-
-{- factorialMod :: Integral t => t -> t -}
-factorialMod m n | n < 2 = 1
-                 | otherwise = (n * (factorialMod m (n - 1))) `mod` m
-
-sumMod m (x:xs) = (x + (sumMod m xs)) `mod` m
-sumMod _ [] = 0
+import ONeillPrimes (primes, primesToLimit)
+import Modulo
 
 between :: Ord t => t -> t -> [t] -> [t]
 between a b = takeWhile (<=b) . dropWhile (<a)
 
-s p = (sumMod p [factorialMod p (p - k) | k <- [1..5]]) `mod` p
+s p = modSum p [modFactorial p (p - k) | k <- [1..5]]
 
 main :: IO ()
-main = do let myprimes = between 5 100000000 primes
-{- main = do let myprimes = between 5 100000 primes -}
+main = do let myprimes = between 5 (10 ^ 6) primes
           print $ sum
                 $ runEval
-                $ parBuffer 4096 rseq
+                $ parBuffer 64 rseq
                 $ map (s) $ myprimes
+
+{- main :: IO () -}
+{- main = do print $ s 99999989 -}
+
+{- main :: IO () -}
+{- main = do print $ sumMod 123456789 [1..(10 ^ 8)] -}
+
+{- main :: IO () -}
+{- main = do print $ factorialMod 99999989 (99999989 - 1) -}
