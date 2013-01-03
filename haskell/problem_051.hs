@@ -36,10 +36,6 @@ overlay _ _ _ = []
 overlays_for :: (Integral t, Show t) => t -> [[Bool]]
 overlays_for n = map (bits) [1..(2 ^ (length $ show n))]
 
--- families
---
--- Returns a list of lists of prime members of "families" of numbers yielded
--- by the method described above.
 families n = filter ((>1) . length) 
                     [filter (prime) $ nub 
                                       [ x
@@ -53,11 +49,5 @@ families n = filter ((>1) . length)
 best_family = maximumBy (\a b -> length a `compare` length b) . families
 
 main :: IO ()
-main = do -- print $ bits 1234567
-          -- print $ bits 256
-          -- print $ overlay [True, False, True, False] 'x' "12345678"
-          -- print $ overlays_for 12345
-          -- mapM_ print $ families 56003
-          -- print $ best_family 56003
-          let candidates = map (\p -> (p, best_family p)) primes
+main = do let candidates = map (\p -> (p, best_family p)) primes
           print $ head $ dropWhile (\(_, lst) -> length lst < 8) candidates

@@ -2,8 +2,8 @@
 -- decimal integers, different sets can be formed. Interestingly with the set
 -- {2,5,47,89,631}, all of the elements belonging to it are prime.
 -- 
--- How many distinct sets containing each of the digits one through nine
--- exactly once contain only prime elements?
+-- How many distinct sets containing each of the digits one through nine exactly
+-- once contain only prime elements?
 -- 
 -- http://projecteuler.net/index.php?section=problems&id=118
 
