@@ -14,6 +14,9 @@
 
 module Main where
 
+import Control.Parallel
+import Control.Parallel.Strategies
+
 import Data.List
 
 import ONeillPrimes (primes)
@@ -36,6 +39,7 @@ overlay _ _ _ = []
 overlays_for :: (Integral t, Show t) => t -> [[Bool]]
 overlays_for n = map (bits) [1..(2 ^ (length $ show n))]
 
+families :: (Integral a, Show a) => a -> [[Integer]]
 families n = filter ((>1) . length) 
                     [filter (prime) $ nub 
                                       [ x
@@ -46,8 +50,9 @@ families n = filter ((>1) . length)
                     | o <- overlays_for n
                     ]
 
+best_family :: Integer -> [Integer]
 best_family = maximumBy (\a b -> length a `compare` length b) . families
 
 main :: IO ()
 main = do let candidates = map (\p -> (p, best_family p)) primes
-          print $ head $ dropWhile (\(_, lst) -> length lst < 8) candidates
+          print $ head $ snd $ head $ dropWhile ((<8) . length . snd) candidates
