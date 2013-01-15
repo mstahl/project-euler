@@ -26,8 +26,7 @@ num_digits = length . show
 s p1 p2 = head $ dropWhile (\x -> not $ isSuffixOf (show p1) (show x)) 
                $ iterate (+p2) (p2 * (p2 `div` p1))
 
--- answers = drop 2 $ parZipWith rwhnf s (myprimes) (tail myprimes)
-answers = drop 2 $ zipWith s (myprimes) (tail myprimes)
+answers = zipWith s (myprimes) (tail myprimes)
 
 main :: IO ()
 main = do print $ length myprimes

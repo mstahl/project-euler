@@ -2,7 +2,7 @@
 -- 
 -- Functions for computing the sigma (number/sum of divisors) function.
 
-module Sigma where
+module Sigma (sigma, sumSigma) where
 
 import ONeillPrimes
 import Data.List (group)
@@ -19,3 +19,5 @@ divisors n = [d | d <- [1..(n `div` 2)], n `mod` d == 0] ++ [n]
 sigma x n = 
   let pf = prime_factors_exp n
   in product $ map (\(p, a) -> sum $ map (\j -> p ^ (j * x)) [0..a]) pf
+
+sumSigma x n = sum $ map (sigma x) [1..n]
