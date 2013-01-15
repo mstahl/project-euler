@@ -9,20 +9,16 @@
 
 module Main where
 
+import List
+import Misc
 import ONeillPrimes
-import Data.List ((\\))
-import Misc (digits)
 
-import Combinatorics (permutations)
+myprimes :: [Int]
+myprimes = reverse $ primesToLimit 98765432
 
-set ds (p:ps) | length (digits p) > length ds = 0                       -- No more than 9 digits
-              | ds == [] = 1                                            -- If we've used up all 9, we have a set
-              | 0 `elem` (digits p) = set ds ps                         -- No zeros allowed
-              | ((digits p) \\ ds) /= [] = set ds ps
-              | otherwise = (set (ds \\ (digits p)) ps) + (set ds ps)
-set _ [] = 0
+is_pandigital_set lst = ([1, 2, 3, 4, 5, 6, 7, 8, 9] \\ mydigits)
+                        where mydigits = flatten $ map (digits) lst
 
 main :: IO ()
--- main = do print $ set [1..3] $ take 5 primes
--- main = do print $ length $ permutations 9
-main = do print $ length $ primesToLimit 98765432
+main = do print $ length $ myprimes
+          print $ is_pandigital_set [2,5,47,89,631]

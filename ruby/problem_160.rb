@@ -13,22 +13,20 @@
 # 
 # http://projecteuler.net/index.php?section=problems&id=160
 
-def trim0s(n)
-  if n < 10 then
-    return n
-  end
-  
-  while n % 10 == 0 do
-    n /= 10
-  end
-  return n
+def trim_zeroes(n)
+  n.to_s.gsub(/0*\Z/, '').to_i
 end
 
-result = 1
-1_000_000_000_000.times do |i|
-  # puts "#{i}: #{result}"
-  result *= i + 1
-  result = trim0s(result) % (10**5)
+def f(n)
+  q = 1
+  (1..n).each do |k|
+    q *= k
+    q = trim_zeroes(q) % 100_000
+  end
+  q % 100_000
 end
 
-p result
+(1..1000).each do |i|
+  puts "f(#{i}) = #{f(i)}"
+end
+

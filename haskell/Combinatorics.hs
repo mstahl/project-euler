@@ -1,6 +1,6 @@
 module Combinatorics where
 
-import List (inits, tails, delete)
+import Data.List (inits, tails, delete)
 
 cartProd (set:sets) = let cp = cartProd sets in [x:xs | x <- set, xs <- cp]
 cartProd [] = [[]]
