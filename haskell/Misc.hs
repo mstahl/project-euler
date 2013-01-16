@@ -3,7 +3,19 @@
 -- This is a module for miscellaneous functions that are used frequently but
 -- don't really have a good place to live.
 
-module Misc (digits, undigits, powMod, (#), mergeAll, perfect_square, factorial, divisors, choices) where
+module Misc (
+  digits,
+  undigits,
+  powMod,
+  (#),
+  mergeAll,
+  perfect_square,
+  factorial,
+  divisors,
+  choices,
+  takeUntil,
+  dropUntil
+) where
 
 import MillerRabin (powMod)
 import Data.Maybe
@@ -66,4 +78,14 @@ choices _ [] = [[]]
 -- choices n xs = [x:xs' | x <- xs, xs' <- choices (n - 1) (delete x xs)]
 choices n xs = filter (\l -> length l == n) [x:xs' | x <- xs, xs' <- choices (n - 1) (dropWhile (<=x) xs)]
 
+-- Takes from a list until a given condition is met. Includes the first term
+-- for which the function given returns true.
+takeUntil :: (a -> Bool) -> [a] -> [a]
+takeUntil f (x:xs) | f x = [x]
+                   | otherwise = x : takeUntil f xs
 
+-- Drops from a list until a given condition is met. The returned list begins
+-- with the first element for which the given function was true.
+dropUntil :: (a -> Bool) -> [a] -> [a]
+dropUntil f (x:xs) | f x = x : xs
+                   | otherwise = dropUntil f xs
