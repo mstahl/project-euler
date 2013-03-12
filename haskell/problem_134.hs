@@ -20,6 +20,9 @@ import Text.Printf
 
 myprimes = drop 2 $ primesToLimit (10 ^ 5)
 
+num_digits :: (Show t) => t -> Int
+num_digits = length . show
+
 s p1 p2 = head $ dropWhile (\x -> not $ isSuffixOf (show p1) (show x)) 
                $ iterate (+p2) (p2 * (p2 `div` p1))
 

@@ -25,15 +25,12 @@ digits n
 sum_digits :: Integral t => t -> t
 sum_digits = sum . digits
 
--- First generate a list, in order, of all numbers raised to all exponents
--- that qualify.
-a = sort [e | a <- [2..200]
-            , b <- [2..15]
-            , let e = a ^ b
-            , a == sum_digits e
-            ]
+-- a :: Integral t => [t]
+a = [x | x <- [10..]
+       , let d = digits x
+       , let l = logBase d x
+       , l == ( fromIntegral $ floor l )
+       ]
 
 main :: IO ()
-main = do print $ take 30 a
-
--- My old solution was too slow, so I got this one from http://www.haskell.org/haskellwiki/Euler_problems/111_to_120#Problem_119
+main = do print $ take 10 a
