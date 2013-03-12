@@ -14,7 +14,8 @@ module Misc (
   divisors,
   choices,
   takeUntil,
-  dropUntil
+  dropUntil,
+  count
 ) where
 
 import MillerRabin (powMod)
@@ -84,8 +85,14 @@ takeUntil :: (a -> Bool) -> [a] -> [a]
 takeUntil f (x:xs) | f x = [x]
                    | otherwise = x : takeUntil f xs
 
--- Drops from a list until a given condition is met. The returned list begins
--- with the first element for which the given function was true.
+-- Drops from a list until a given condition is met. The
+-- returned list begins with the first element for which
+-- the given function was true.
 dropUntil :: (a -> Bool) -> [a] -> [a]
 dropUntil f (x:xs) | f x = x : xs
                    | otherwise = dropUntil f xs
+
+-- Counts the number of items in a list that satisfy some
+-- given condition.
+count :: (t -> Bool) -> [t] -> Int
+count f = length . filter (f)

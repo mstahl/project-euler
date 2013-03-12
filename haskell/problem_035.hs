@@ -11,17 +11,16 @@
 module Main where
 
 import ONeillPrimes (primesToLimit)
-import MillerRabin (prime)
 import Misc (digits, undigits)
 import Data.List (tails)
+import MillerRabin (prime)
 
 rotations n = 
   let ds = digits n
       dl = length ds
   in map (undigits) $ take dl $ map (take dl) $ tails $ cycle ds
 
-test = all (prime) . rotations
-
 main :: IO ()
-main = do let answers = filter (test) $ primesToLimit 1000000
+main = do let myprimes = primesToLimit 1000000
+              answers = filter (all (prime) . rotations) myprimes
           print $ length $ answers

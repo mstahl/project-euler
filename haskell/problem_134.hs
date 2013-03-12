@@ -18,7 +18,7 @@ import Data.List (isSuffixOf)
 import ONeillPrimes
 import Text.Printf
 
-myprimes = drop 2 $ primesToLimit $ 1000000
+myprimes = drop 2 $ primesToLimit (10 ^ 5)
 
 num_digits :: (Show t) => t -> Int
 num_digits = length . show
@@ -33,4 +33,3 @@ main = do print $ length myprimes
           mapM_ (print) answers
           putStrLn "------------------------------"
           print $ sum answers
-

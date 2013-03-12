@@ -6,7 +6,7 @@ import ONeillPrimes (primes, prime_factors)
 import MillerRabin (prime)
 import Data.List
 import Data.Array
-import Ratio
+import Data.Ratio
 
 import Misc (divisors)
 
