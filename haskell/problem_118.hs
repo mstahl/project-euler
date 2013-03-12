@@ -23,11 +23,14 @@ seed = "123456789"
 empty [] = True
 empty _ = False
 
+setify :: [a] -> [Int] -> [[a]]
 setify str (p:ps) = (take p str) : setify (drop p str) ps
 setify _ _ = []
 
+non_unique_partitions :: Int -> [[Int]]
 non_unique_partitions = nub . foldl1 (++) . map (permutationsOf) . partitions
 
+sets_of :: Show a => a -> [[Integer]]
 sets_of x = let x'    = (show x)::String
                 parts = non_unique_partitions $ length seed
             in map (map (\q -> (read q)::Integer)) $ map (setify x') parts

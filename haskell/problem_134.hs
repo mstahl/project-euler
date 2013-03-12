@@ -18,7 +18,7 @@ import Data.List (isSuffixOf)
 import ONeillPrimes
 import Text.Printf
 
-myprimes = drop 2 $ primesToLimit $ 1000000
+myprimes = drop 2 $ primesToLimit (10 ^ 5)
 
 s p1 p2 = head $ dropWhile (\x -> not $ isSuffixOf (show p1) (show x)) 
                $ iterate (+p2) (p2 * (p2 `div` p1))
@@ -30,4 +30,3 @@ main = do print $ length myprimes
           mapM_ (print) answers
           putStrLn "------------------------------"
           print $ sum answers
-
