@@ -17,24 +17,21 @@ import Data.List
 
 seed = "123456789"
 
-increasing :: Ord a => [a] -> Bool
-increasing (a:b:xs) | a <= b = increasing (b:xs)
-                    | otherwise = False
-increasing _ = True
+nonincreasing :: Ord a => [a] -> Bool
+nonincreasing (a:b:xs)
+  | b <= a = nonincreasing (b:xs)
+  | otherwise = False
+nonincreasing _ = True
 
-setify :: Integer -> [Int] -> [Integer]
-setify i =
-  let string = show i
-      setify' str (p:ps) = ((read (take p str))::Integer) : setify' (drop p str) ps
-      setify' _ _ = []
-  in sort . setify' string
-
-unique_partitions_of_9 = partitions 9
-
-sets_from_permutation :: Integer -> [[Integer]]
-sets_from_permutation x = map (setify x) unique_partitions_of_9
+chop_up :: String -> [Int] -> [Integer]
+chop_up string (x:xs) = (read $ take x string) : chop_up (drop x string) xs
+chop_up _ _ = []
 
 main :: IO ()
-main = do let perms = map (\q -> (read q)::Integer) $ permutationsOf seed
-              all_sets_list = filter (all prime) $ nub $ concatMap (sets_from_permutation) perms
-          print $ length all_sets_list
+main = do print $ length
+                $ [ q
+                  | p <- permutationsOf "123456789"
+                  , q <- map (chop_up p) $ partitions 9
+                  , nonincreasing q
+                  , all prime q
+                  ]
