@@ -159,8 +159,29 @@ def uniq(l):
     '''
     return list(set(l))
 
+def partitions(n):
+    '''
+    Returns the number of partitions of a number n.
+    '''
+    def p(k, n):
+        if k > n:
+            return 0
+        elif k == n:
+            return 1
+        else:
+            return p(k + 1, n) + p(k, n - k)
+    return p(1, n)
 
-
-
-
+def list_partitions_of(n):
+    '''
+    Returns a list of the integer partitions of n.
+    '''
+    def p(k, n):
+        if k > n:
+            return []
+        elif k == n:
+            return [k]
+        else:
+            return p(k + 1, n) + p(k, n - k)
+    return p(1, n)
 

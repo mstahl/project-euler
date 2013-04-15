@@ -18,6 +18,7 @@ find2km n = f 0 n
 prime :: Integer -> Bool
 prime n | n < 2 = False
         | n `elem` [2,3,5,7,11,13,17,23] = True
+        | n `mod` 2 == 0 = False
         | n < 1373653         = all (millerRabinPrimality n) [2, 3]
         | n < 9080191         = all (millerRabinPrimality n) [31, 73]
         | n < 4759123141      = all (millerRabinPrimality n) [2, 7, 61]
@@ -27,7 +28,8 @@ prime n | n < 2 = False
         | otherwise = all (millerRabinPrimality n) [2..m]
                       where m = min (n - 1) (floor (2 * ((log (fromIntegral n)) ** 2)))
 
-primes = filter (prime) [2..]
+primes :: [Integer]
+primes = filter (prime) $ 2:[3,5..]
 
 -- prime_factors :: Integer -> [t]
 prime_factors n = factor n primes

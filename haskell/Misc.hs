@@ -4,18 +4,8 @@
 -- don't really have a good place to live.
 
 module Misc (
-  digits,
-  undigits,
-  powMod,
-  (#),
-  mergeAll,
-  perfect_square,
-  factorial,
-  divisors,
-  choices,
-  takeUntil,
-  dropUntil,
-  count
+  digits, undigits, powMod, (#), mergeAll, perfect_square, factorial, divisors,
+  choices, takeUntil, dropUntil, count
 ) where
 
 import MillerRabin (powMod)

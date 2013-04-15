@@ -9,9 +9,6 @@
 
 module Main where
 
-import Control.Parallel
-import Control.Parallel.Strategies
-
 import Combinatorics
 import Misc
 import MillerRabin (prime)
@@ -20,28 +17,24 @@ import Data.List
 
 seed = "123456789"
 
-empty [] = True
-empty _ = False
+increasing :: Ord a => [a] -> Bool
+increasing (a:b:xs) | a <= b = increasing (b:xs)
+                    | otherwise = False
+increasing _ = True
 
-setify :: [a] -> [Int] -> [[a]]
-setify str (p:ps) = (take p str) : setify (drop p str) ps
-setify _ _ = []
+setify :: Integer -> [Int] -> [Integer]
+setify i =
+  let string = show i
+      setify' str (p:ps) = ((read (take p str))::Integer) : setify' (drop p str) ps
+      setify' _ _ = []
+  in sort . setify' string
 
-non_unique_partitions :: Int -> [[Int]]
-non_unique_partitions = nub . foldl1 (++) . map (permutationsOf) . partitions
+unique_partitions_of_9 = partitions 9
 
-sets_of :: Show a => a -> [[Integer]]
-sets_of x = let x'    = (show x)::String
-                parts = non_unique_partitions $ length seed
-            in map (map (\q -> (read q)::Integer)) $ map (setify x') parts
-
-prime_sets_of :: Integer -> [[Integer]]
-prime_sets_of = filter (all prime) . sets_of
+sets_from_permutation :: Integer -> [[Integer]]
+sets_from_permutation x = map (setify x) unique_partitions_of_9
 
 main :: IO ()
-main = do print $ sum
-                $ runEval
-                $ parBuffer 4096 rseq
-                $ map (length . prime_sets_of) 
-                $ map (\q -> (read q)::Integer)
-                $ permutationsOf seed
+main = do let perms = map (\q -> (read q)::Integer) $ permutationsOf seed
+              all_sets_list = filter (all prime) $ nub $ concatMap (sets_from_permutation) perms
+          print $ length all_sets_list
