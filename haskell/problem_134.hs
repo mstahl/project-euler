@@ -7,7 +7,7 @@
 -- digits are formed by p_(1) and n is divisible by p_(2). Let S be the smallest
 -- of these values of n.
 -- 
--- Find ∑ S for every pair of consecutive primes with 5 ≤ p_(1) ≤ 10^6.
+-- Find ∑ S for every pair of consecutive primes with 5 ≤ p_(1) ≤ 1,000,000.
 -- 
 -- http://projecteuler.net/index.php?section=problems&id=134
 
@@ -18,18 +18,23 @@ import Data.List (isSuffixOf)
 import ONeillPrimes
 import Text.Printf
 
-myprimes = drop 2 $ primesToLimit (10 ^ 5)
+prependWith :: Integer -> Integer -> Integer
+prependWith p x = read $ (show x) ++ (show p)
 
-num_digits :: (Show t) => t -> Int
-num_digits = length . show
+s :: (Integral t, Show t) => t -> t -> t
+s p q = head $ filter (\x -> (p') `isSuffixOf` (show x))
+             $ iterate (+q) q
+        where p' = show p
 
-s p1 p2 = head $ dropWhile (\x -> not $ isSuffixOf (show p1) (show x)) 
-               $ iterate (+p2) (p2 * (p2 `div` p1))
-
-answers = zipWith s (myprimes) (tail myprimes)
+{-
+ - s :: (Integral t, Show t) => t -> t -> t
+ - s p q = head $ filter (\x -> x `mod` q == 0)
+ -              $ map (prependWith p) [1..]
+ -}
 
 main :: IO ()
-main = do print $ length myprimes
-          mapM_ (print) answers
-          putStrLn "------------------------------"
-          print $ sum answers
+main = do let problem_size = 10 ^ 6
+              myprimes = drop 2 $ primesToLimit problem_size
+              s_values = zipWith (s) myprimes (drop 3 primes)
+          mapM_ print s_values
+          print $ sum s_values

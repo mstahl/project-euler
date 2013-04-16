@@ -8,20 +8,28 @@
 
 module Main where
 
+import Misc (mergeAll)
 import MillerRabin (prime)
-import ONeillPrimes (primes)
 
-perfect_square :: Integral t => t -> Bool
-perfect_square n = m * m == n where m = floor . sqrt . fromIntegral $ n
+-- problem_size = 10^6
+problem_size = 150000000
 
-test n = [m + 1, m + 3, m + 7, m + 9, m + 13, m + 27] == (takeWhile (<=(m + 27)) $ dropWhile (<(m + 1)) primes)
-         where m = n * n
-
-ns (a:b:c:d:e:f:xs) = 
-  if all (perfect_square) [a - 1, b - 3, c - 7, d - 9, e - 13, f - 27]
-  then (floor $ sqrt $ fromIntegral $ a - 1) : ns (b:c:d:e:f:xs)
-  else ns (b:c:d:e:f:xs)
+ns = [ n
+     -- | n <- concatMap (\k -> map (+k) [10, 80, 130, 200]) [0,210..problem_size]
+     | n <- mergeAll [ [0, 210..problem_size]
+                     , [10,220..problem_size]
+                     , [80,290..problem_size]
+                     , [130,340..problem_size]
+                     , [200,410..problem_size]
+                     ]
+     -- , let m = n * n
+     -- , prime $ m + 1
+     -- , prime $ m + 3
+     -- , prime $ m + 7
+     -- , prime $ m + 9
+     -- , prime $ m + 13
+     -- , prime $ m + 27
+     ]
 
 main :: IO ()
-main = do mapM_ (print) $ take 2 $ ns primes
-
+main = do mapM_ (print) ns
