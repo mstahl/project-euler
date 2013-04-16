@@ -18,11 +18,4 @@ champernowne :: [Int]
 champernowne = concatMap digits [0..]
 
 main :: IO ()
-main = do print $ product [ champernowne !! 1
-                          , champernowne !! 10
-                          , champernowne !! 100
-                          , champernowne !! 1000
-                          , champernowne !! 10000
-                          , champernowne !! 100000
-                          , champernowne !! 1000000
-                          ]
+main = do print $ product $ map ((champernowne !!) . (10 ^)) [0..6]
