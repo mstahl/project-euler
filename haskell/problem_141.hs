@@ -28,47 +28,38 @@ import Data.Maybe
 import Control.Parallel
 import Control.Parallel.Strategies
 
-is_geometric :: Integral t => t -> t -> Bool
-is_geometric n d = let (q, r) = divMod n d
-                       [d', q', r'] = sort [d, q, r]
-                   in d' % q' == q' % r'
+perfect_square :: Integral t => t -> Bool
+perfect_square n = m * m == n
+                   where m = floor $ sqrt $ fromIntegral n
 
 is_progressive :: Integral t => t -> Bool
-is_progressive n = any (is_geometric n) [2..(floor . sqrt . fromIntegral $ n)]
+is_progressive n =
+  let is_progressive' n d = r % d == d % q
+                            where (q, r) = n `divMod` d
+  in any (is_progressive' n) [1..(floor $ sqrt $ fromIntegral n)]
 
--- limit = 10**12
-limit = 10**10
+-- sqrt_of_limit = 10^6
+sqrt_of_limit = 10^4
 
 parFilter :: (a -> Bool) -> [a] -> [a]
-parFilter f = catMaybes . runEval 
-                        . parBuffer 4096 rpar
-                        . map (\n -> if f n
-                                     then Just n
-                                     else Nothing)
+parFilter f = catMaybes
+            . runEval
+            . parBuffer 2048 rpar
+            . map (\n -> if f n
+                         then Just n
+                         else Nothing)
 
 main :: IO ()
-main = do let squares = map (^2) [1..(floor $ sqrt $ limit)]
-              progressives = parFilter is_progressive squares
-          mapM_ (print) progressives
-          -- print $ sum $ progressives
-
-
-
-
-----------------------------------------------------------------
--- Some test code
-----------------------------------------------------------------
-
--- import Data.Maybe
--- import Control.Parallel.Strategies
--- import Control.Parallel
--- 
--- factors n = let candidates = [2..floor (sqrt (fromInteger n))]
---             in catMaybes $ map (\x ->
---                                       if n `mod` x == 0
---                                       then Just (x, n `div` x)
---                                       else Nothing) candidates
--- bigNums = [2000000000000..]
--- answer = (parMap rwhnf) (length . factors) (take 10 bigNums)
--- 
--- main = print answer
+main = do let ns = [ n
+                   | a <- [2..9999]
+                   , b <- [1..(a - 1)]
+                   , k <- [1..((10^12) `div` (b^2))]
+                   , a `gcd` b == 1
+                   , let n = k^2 * a^3 * b + k * b^2
+                   , n < 10^12
+                   -- , perfect_square n
+                   ]
+              ns' = runEval $ parList rpar ns
+          mapM_ (print) ns
+          putStrLn "+------------------+"
+          print $ sum ns

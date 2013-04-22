@@ -1,6 +1,10 @@
-
 module Main where
+
+import Data.Ratio
 
 fibonaccis = 1 : 1 : zipWith (+) fibonaccis (tail fibonaccis)
 
-a_f m x = sum $ map (\(a, b) -> (x ** a) * b) $ zip [1..m] fibonaccis
+rationals :: [Ratio Int]
+rationals = do denominator <- [2..]
+               numerator <- [1..(denominator - 1)]
+               [numerator % denominator]

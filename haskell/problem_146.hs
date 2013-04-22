@@ -12,23 +12,24 @@ import Misc (mergeAll)
 import MillerRabin (prime)
 
 -- problem_size = 10^6
-problem_size = 150000000
+problem_size = 149999999
+
+potential_ns = mergeAll $! [ [0, 210..problem_size]
+                           , [10,220..problem_size]
+                           , [80,290..problem_size]
+                           , [130,340..problem_size]
+                           , [200,410..problem_size]
+                           ]
 
 ns = [ n
-     -- | n <- concatMap (\k -> map (+k) [10, 80, 130, 200]) [0,210..problem_size]
-     | n <- mergeAll [ [0, 210..problem_size]
-                     , [10,220..problem_size]
-                     , [80,290..problem_size]
-                     , [130,340..problem_size]
-                     , [200,410..problem_size]
-                     ]
-     -- , let m = n * n
-     -- , prime $ m + 1
-     -- , prime $ m + 3
-     -- , prime $ m + 7
-     -- , prime $ m + 9
-     -- , prime $ m + 13
-     -- , prime $ m + 27
+     | n <- potential_ns
+     , let m = n * n
+     , prime $ m + 1
+     , prime $ m + 3
+     , prime $ m + 7
+     , prime $ m + 9
+     , prime $ m + 13
+     , prime $ m + 27
      ]
 
 main :: IO ()

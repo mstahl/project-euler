@@ -5,12 +5,13 @@
 
 module Misc (
   digits, undigits, powMod, (#), mergeAll, perfect_square, factorial, divisors,
-  choices, takeUntil, dropUntil, count
+  choices, takeUntil, dropUntil, count, isqrt, is_perfect_square
 ) where
 
 import MillerRabin (powMod)
 import Data.Maybe
 import Data.List (nub, sort, delete)
+import Data.Ratio
 
 {- parFilter :: (a -> Bool) -> [a] -> [a] -}
 {- parFilter f = catMaybes . runEval  -}
@@ -86,3 +87,13 @@ dropUntil f (x:xs) | f x = x : xs
 -- given condition.
 count :: (t -> Bool) -> [t] -> Int
 count f = length . filter (f)
+
+isqrt :: Integral t => t -> t
+isqrt n = let recurrence x = (x + (n `div` x)) `div` 2
+              first_repeat (a:b:xs) | a == b = a
+                                    | otherwise = first_repeat (b:xs)
+          in first_repeat $ iterate recurrence n
+
+is_perfect_square :: Integral t => t -> Bool
+is_perfect_square x = x' * x' == x
+                      where x' = isqrt x

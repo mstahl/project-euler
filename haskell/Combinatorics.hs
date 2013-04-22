@@ -5,7 +5,7 @@ import Data.List (inits, tails, delete)
 cartProd (set:sets) = let cp = cartProd sets in [x:xs | x <- set, xs <- cp]
 cartProd [] = [[]]
 
-
+powerset :: [a] -> [[a]]
 powerset [] = [[]]
 powerset (x:xs) = let p = powerset xs in p ++ map (x:) p
 
@@ -37,7 +37,7 @@ setsums (x:xs) n | x > n     = setsums xs n
 partitions n = setsums (reverse [1..n]) n
 
 sum4squares n = [s | s <- setsums squares n, length s <= 4]
-    where squares = reverse $ takeWhile (<= n) [k*k | k <- [1..] ]
+  where squares = reverse $ takeWhile (<= n) [k*k | k <- [1..] ]
 
 
 

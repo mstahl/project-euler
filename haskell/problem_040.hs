@@ -15,7 +15,7 @@ module Main where
 import Misc
 
 champernowne :: [Int]
-champernowne = concatMap digits [0..]
+champernowne = [0..] >>= digits
 
 main :: IO ()
 main = do print $ product $ map ((champernowne !!) . (10 ^)) [0..6]
