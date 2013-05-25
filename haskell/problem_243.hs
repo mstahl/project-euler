@@ -15,15 +15,21 @@
 module Main where
 
 import Totient
-import Ratio
-import ONeillPrimes (composites)
+import Data.Ratio
+import ONeillPrimes (primes, composites)
 
 resilience :: Integral t => t -> Ratio t
 resilience d = (totient d) % (d - 1)
+
+resiliences = [ ( d * i, (s * i) % (d * i - 1) )
+              | (p, d, s) <- zip3 primes
+                                  (scanl1 (*) primes)
+                                  (scanl1 (*) (map (+(-1)) primes))
+              , i <- [2..p]
+              ]
 
 main :: IO ()
 main = do print $ fst 
                 $ head 
                 $ dropWhile (\(_, r) -> r >= 15499 % 94744)
-                $ map (\d -> (d, resilience d)) [2..]
-
+                $ map (\d -> (d, resilience d)) (tail composites)

@@ -39,7 +39,7 @@ factors n = [d | d <- [1..(n `div` 2)] ++ [n]
 (x:xs) \\ (y:ys) | x == y = xs \\ ys
                  | x < y = x : (xs \\ (y:ys))
 composites :: Integral t => [t]
-composites = [1..] \\ primes
+composites = [2..] \\ primes
 -- end mstahl changes
 
 -- Priority Queues;  this is essentially a copy-and-paste-job of

@@ -9,30 +9,22 @@
 
 module Main where
 
-import ONeillPrimes (prime_factors)
-import Data.List ((\\),sort)
-import Misc (mergeAll,(#))
+import ONeillPrimes (primes, composites)
 
--- n = 20000000
--- k = 15000000
-n = 200000
-k = 150000
+n' = 20000000
+k' = 15000000
 
-numerator = concatMap (prime_factors) [(n - k + 1)..n]
-denominator = concatMap (prime_factors) [1..k]
+sum_of_factors :: Integral t => t -> t -> t
+sum_of_factors p = sum . takeWhile (>0) 
+                       . tail
+                       . iterate (\n -> n `div` p)
 
-(\\\) :: Ord t => [t] -> [t] -> [t]
-a@(x:xs) \\\ b@(y:ys) | x < y = x : (xs \\\ b)
-                      | x > y = y : (a \\\ ys)
-                      | x == y = x : y : (xs \\\ ys)
-_ \\\ [] = []
-[] \\\ _ = []
-
-fact :: Integral t => t -> t
-fact n = product [1..n]
-
-choose :: Integral t => t -> t -> t
-n `choose` k = (fact n) `div` ((fact k) * (fact (n - k)))
+sum_of_factors_combination :: Integral t => t -> t -> t
+sum_of_factors_combination n k =
+  sum $ map (\i -> ((sum_of_factors i n)
+                  - (sum_of_factors i k)
+                  - (sum_of_factors i (n - k))) * i)
+      $ takeWhile (<=n) primes
 
 main :: IO ()
-main = do print $ sum $ numerator \\ denominator
+main = do print $ sum_of_factors_combination n' k'
