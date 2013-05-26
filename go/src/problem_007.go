@@ -10,7 +10,12 @@ package main
 import "miller_rabin"
 
 func main() {
-  for i := 2; i < 1000; i++ {
-    fmt.Println(i, miller_rabin.Test(i))
+  primes_found, p := 1, 0
+  for i := 1; primes_found < 10001; i += 2 {
+    if miller_rabin.Test(i) {
+      primes_found++
+      p = i
+    }
   }
+  println(p)
 }
