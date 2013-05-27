@@ -6,37 +6,16 @@
 
 package main
 
-import "fmt"
+import m "miller_rabin"
 
-// const limit = 2000000
-const limit = 100000
-
-func sum(array []int) (s int) {
-  for _, v := range array {
-    s += v
-  }
-  return
-}
+const limit = 2000000
 
 func main() {
-  sieve := new([limit - 2]int)
-  for i := 2; i < limit; i++ {
-    sieve[i - 2] = i
-  }
-
-  // Sieve of Eratosthenes
-  for idx, val := range sieve {
-    if val == 0 {
-      continue
-    }
-    // fmt.Println("Sieving... ", val)
-
-    for i := idx + 1; i < len(sieve); i++ {
-      if sieve[i] % val == 0 {
-        sieve[i] = 0
-      }
+  sum := 0
+  for i := 0; i < limit; i++ {
+    if m.Test(i) {
+      sum += i
     }
   }
-  fmt.Println(sieve)
-  fmt.Println(sum(sieve[0:]))
+  println(sum)
 }
