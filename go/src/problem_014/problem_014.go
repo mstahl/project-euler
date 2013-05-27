@@ -21,15 +21,18 @@
 
 package main
 
-func collatz_length(n int) int {
-  if n == 1 {
-    return 1
+func collatz_length(n int) (i int) {
+  if n == 1 { return 1 }
+
+  for n > 1 {
+    if n & 1 == 0 {
+      n = n >> 1
+    } else {
+      n = 3 * n + 1
+    }
+    i++
   }
-  if n & 1 == 1 {
-    return 1 + collatz_length(3 * n + 1)
-  } else {
-    return 1 + collatz_length(n >> 1)
-  }
+  return
 }
 
 func main() {
