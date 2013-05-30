@@ -12,7 +12,9 @@
 
 package main
 
-const limit = 10000
+const (
+  limit = 10000
+)
 
 func d(n int) (sum int) {
   for i := 1; i <= n >> 1; i++ {
@@ -24,18 +26,20 @@ func d(n int) (sum int) {
 }
 
 func main() {
-  results := new([limit]int)
+  results := new([limit]byte)
 
-  for i := 4; i < 10000; i++ {
+  for i := 4; i < limit; i++ {
     if other := d(i); d(other) == i && other != i {
-      results[i] = i
-      results[other] = other
+      results[i] = 1
+      results[other] = 1
     }
   }
 
   sum := 0
-  for _, v := range results {
-    sum += v
+  for i, v := range results {
+    if v == 1 {
+      sum += i
+    }
   }
   println(sum)
 }
