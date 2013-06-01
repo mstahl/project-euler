@@ -14,6 +14,7 @@ func TestClearAll(t *testing.T) {
     r = r << 1
   }
 }
+
 func TestClear(t *testing.T) {
   b := NewBitfield(64)
   b.representation[0] = 0xFFFF
@@ -82,5 +83,12 @@ func TestSetAll(t *testing.T) {
       t.FailNow()
     }
     r = r << 1
+  }
+}
+
+func TestSize(t *testing.T) {
+  b := NewBitfield(37)
+  if b.Size() != 37 {
+    t.FailNow()
   }
 }

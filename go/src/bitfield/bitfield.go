@@ -50,6 +50,10 @@ func (b Bitfield) SetAll() {
   }
 }
 
+func (b Bitfield) Size() uint {
+  return b.size
+}
+
 func NewBitfield(size uint) *Bitfield {
   b := new(Bitfield)
   b.representation = make([]uint64, (size / 64) + 1)
