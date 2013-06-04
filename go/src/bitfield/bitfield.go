@@ -54,6 +54,8 @@ func (b Bitfield) Size() uint {
   return b.size
 }
 
+// Constructor ----------------------------------------------------------------
+
 func NewBitfield(size uint) *Bitfield {
   b := new(Bitfield)
   b.representation = make([]uint64, (size / 64) + 1)
