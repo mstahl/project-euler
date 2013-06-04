@@ -124,6 +124,7 @@ func main() {
     fmt.Sscan(v, x)
     sum.Add(sum, x)
   }
+  // TODO There simply has got to be a better way of handling this.
   ten    := big.NewInt(10)
   tenten := big.NewInt(10000000000)
   for ; sum.Cmp(tenten) > 0 ; {
