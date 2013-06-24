@@ -37,18 +37,37 @@ func TestAdd(t *testing.T) {
   }
 }
 
-/*
- * func TestBalance(t *testing.T) {
- *   s := NewSet(0)
- *   for i := uint64(1) ; i < 16 ; i++ {
- *     s = s.Add(i)
- *   }
- *   if h := s.Height(); h != 4 {
- *     fmt.Println("Expected 4, got ", h)
- *     t.FailNow()
- *   }
- * }
- */
+func TestNewSet(t *testing.T) {
+  s1 := NewSet()
+  if s1.initialized == true {
+    t.Error("NewSet doesn't work without arguments.")
+  }
+
+  s2 := NewSet(1)
+  if s2.initialized == false {
+    t.Error("NewSet not initialized.")
+  }
+  if s2.contents != 1 {
+    t.Error("NewSet contents wrong with one argument.")
+  }
+
+  s3 := NewSet(1, 2, 3)
+  if s3.Size() != 3 {
+    t.Error("NewSet size wrong after variadic initialization.")
+  }
+}
+
+func TestBalance(t *testing.T) {
+  t.Skip("Balance not implemented yet.")
+  s := NewSet(0)
+  for i := uint64(1) ; i < 16 ; i++ {
+    s = s.Add(i)
+  }
+  if h := s.Height(); h != 4 {
+    fmt.Println("Expected 4, got ", h)
+    t.FailNow()
+  }
+}
 
 func TestRotateRight(t *testing.T) {
   s            := NewSet(5)
@@ -95,6 +114,17 @@ func TestRotateLeft(t *testing.T) {
   if satisfies_bst_property(s) != true {
     println("Rotate left failed.")
     t.FailNow()
+  }
+}
+
+func TestSize(t *testing.T) {
+  s := NewSet()
+  s.Add(1)
+  s.Add(2)
+  s.Add(3)
+
+  if s.Size() != 3 {
+    t.Errorf("Size is wrong. Expected %d, got %d", 3, s.Size())
   }
 }
 

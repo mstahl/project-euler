@@ -19,10 +19,11 @@ type Set struct {
 
 // Constructors ---------------------------------------------------------------
 
-func NewSet(x uint64) (new_set *Set) {
-  new_set             = new(Set)
-  new_set.contents    = x
-  new_set.initialized = true
+func NewSet(x ...uint64) (new_set *Set) {
+  new_set = new(Set)
+  for _, v := range x {
+    new_set.Add(v)
+  }
   return
 }
 
@@ -121,6 +122,19 @@ func (s *Set) Print() {
     s.right.Print()
   }
   fmt.Print(")")
+}
+
+func (s *Set) Size() (my_size int) {
+  if s.left != nil {
+    my_size += s.left.Size()
+  }
+  if s.right != nil {
+    my_size += s.right.Size()
+  }
+  if s.initialized {
+    my_size += 1
+  }
+  return
 }
 
 // Private methods -------------------------------------------------------------
