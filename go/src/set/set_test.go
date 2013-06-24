@@ -59,13 +59,12 @@ func TestNewSet(t *testing.T) {
 
 func TestBalance(t *testing.T) {
   t.Skip("Balance not implemented yet.")
-  s := NewSet(0)
-  for i := uint64(1) ; i < 16 ; i++ {
+  s := NewSet()
+  for i := uint64(0) ; i < 16 ; i++ {
     s = s.Add(i)
   }
-  if h := s.Height(); h != 4 {
-    fmt.Println("Expected 4, got ", h)
-    t.FailNow()
+  if h := s.Height(); false || h != 4 {
+    t.Error("Expected 4, got ", h)
   }
 }
 
