@@ -1,39 +1,46 @@
 package set
 
 import "testing"
-import "fmt"
+// import "fmt"
 
 func TestAdd(t *testing.T) {
   s := NewSet(5)
 
   if s.Includes(5) != true {
-    fmt.Println("Set isn't storing first item.")
-    t.FailNow()
+    t.Error("Set isn't storing first item.")
   }
 
   s = s.Add(2)
 
   if s.Includes(2) != true {
-    fmt.Println("Set isn't storing second item.")
-    t.FailNow()
+    t.Error("Set isn't storing second item.")
   }
   if s.left.contents != 2 {
-    fmt.Println("Set isn't storing 2 properly.")
+    t.Error("Set isn't storing 2 properly.")
   }
 
   s.Add(8)
 
   if s.Includes(8) != true {
-    fmt.Println("Set isn't storing third item.")
-    t.FailNow()
+    t.Error("Set isn't storing third item.")
   }
   if s.right.contents != 8 {
-    fmt.Println("Set isn't storing 8 properly.")
+    t.Error("Set isn't storing 8 properly.")
   }
 
   if !((s.left != nil && s.left.Includes(2)) || (s.right != nil && s.right.Includes(8))) {
-    fmt.Println("Set tree structure jacked up.")
-    t.FailNow()
+    t.Error("Set tree structure jacked up.")
+  }
+}
+
+func TestBalance(t *testing.T) {
+  // t.Skip("Balance not implemented yet.")
+  s := NewSet()
+  for i := uint64(0) ; i < 16 ; i++ {
+    s = s.Add(i)
+  }
+  if h := s.Height(); false || h != 4 {
+    t.Error("Expected 4, got ", h)
   }
 }
 
@@ -57,14 +64,25 @@ func TestNewSet(t *testing.T) {
   }
 }
 
-func TestBalance(t *testing.T) {
-  t.Skip("Balance not implemented yet.")
-  s := NewSet()
-  for i := uint64(0) ; i < 16 ; i++ {
-    s = s.Add(i)
+func TestRotateLeft(t *testing.T) {
+  s            := NewSet(3)
+  s.left        = NewSet(2)
+  s.right       = NewSet(5)
+  s.right.left  = NewSet(4)
+  s.right.right = NewSet(7)
+
+  s.left.parent        = s
+  s.right.parent       = s
+  s.right.left.parent  = s.right
+  s.right.right.parent = s.right
+
+  s = s.rotate_left()
+
+  if s.contents != 5 {
+    t.Error("Rotate left: contents of root node incorrect")
   }
-  if h := s.Height(); false || h != 4 {
-    t.Error("Expected 4, got ", h)
+  if satisfies_bst_property(s) != true {
+    t.Error("Rotate left: BST property not satisfied")
   }
 }
 
@@ -87,28 +105,6 @@ func TestRotateRight(t *testing.T) {
   }
   if satisfies_bst_property(s) != true {
     t.Error("Rotate right: BST property not satisfied")
-  }
-}
-
-func TestRotateLeft(t *testing.T) {
-  s            := NewSet(3)
-  s.left        = NewSet(2)
-  s.right       = NewSet(5)
-  s.right.left  = NewSet(4)
-  s.right.right = NewSet(7)
-
-  s.left.parent        = s
-  s.right.parent       = s
-  s.right.left.parent  = s.right
-  s.right.right.parent = s.right
-
-  s = s.rotate_left()
-
-  if s.contents != 5 {
-    t.Error("Rotate left: contents of root node incorrect")
-  }
-  if satisfies_bst_property(s) != true {
-    t.Error("Rotate left: BST property not satisfied")
   }
 }
 

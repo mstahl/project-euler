@@ -33,6 +33,8 @@ func NewSet(x ...uint64) (new_set *Set) {
   return
 }
 
+// Public methods -------------------------------------------------------------
+
 func (s *Set) Add(n uint64) *Set {
   if !s.initialized {
     s.contents = n
@@ -113,23 +115,6 @@ func (sp *Set) Includes(n uint64) bool {
   return false
 }
 
-func (s *Set) String() (str string) {
-  str += "("
-  if s.left == nil {
-    str += "nil"
-  } else {
-    str += s.left.String()
-  }
-  str += "," + string(s.contents) + ","
-  if s.right == nil {
-    str += "nil"
-  } else {
-    str += s.right.String()
-  }
-  str += ")"
-  return
-}
-
 func (s *Set) Print() {
   if s == nil {
     fmt.Print("nil")
@@ -163,22 +148,28 @@ func (s *Set) Size() (my_size int) {
   return
 }
 
+func (s *Set) String() (str string) {
+  str += "("
+  if s.left == nil {
+    str += "nil"
+  } else {
+    str += s.left.String()
+  }
+  str += "," + string(s.contents) + ","
+  if s.right == nil {
+    str += "nil"
+  } else {
+    str += s.right.String()
+  }
+  str += ")"
+  return
+}
+
 // Private methods -------------------------------------------------------------
 
-func (root *Set) rotate_right() (pivot *Set) {
-  pivot = root.left
-
-  if pivot == nil || pivot.initialized != true {
-    return root
-  }
-
-  root.left = pivot.right
-  pivot.right = root
-
-  root.left.parent = root
-  pivot.right.parent = pivot
-  pivot.parent = nil
-  return
+func (root *Set) balance() *Set {
+  fmt.Println("#balance not yet implemented.")
+  return new(Set)
 }
 
 func (root *Set) rotate_left() (pivot *Set) {
@@ -197,7 +188,18 @@ func (root *Set) rotate_left() (pivot *Set) {
   return
 }
 
-func (root *Set) balance() *Set {
-  fmt.Println("#balance not yet implemented.")
-  return new(Set)
+func (root *Set) rotate_right() (pivot *Set) {
+  pivot = root.left
+
+  if pivot == nil || pivot.initialized != true {
+    return root
+  }
+
+  root.left = pivot.right
+  pivot.right = root
+
+  root.left.parent = root
+  pivot.right.parent = pivot
+  pivot.parent = nil
+  return
 }
