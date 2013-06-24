@@ -11,10 +11,16 @@ package set
 import "fmt"
 
 type Set struct {
+  // Structural fields
+  parent *Set
   left *Set
-  contents uint64
-  initialized bool
   right *Set
+
+  // Contents
+  contents uint64
+
+  // Metadata
+  initialized bool
 }
 
 // Constructors ---------------------------------------------------------------
@@ -35,18 +41,38 @@ func (s *Set) Add(n uint64) *Set {
     if n < s.contents {
       if s.left == nil {
         s.left = NewSet(n)
+        s.left.parent = s
       } else {
         s.left.Add(n)
       }
     } else if n > s.contents {
       if s.right == nil {
         s.right = NewSet(n)
+        s.right.parent = s
       } else {
         s.right.Add(n)
       }
     }
   }
   return s
+}
+
+func (s *Set) Find(x uint64) *Set {
+  if x < s.contents {
+    if s.left == nil {
+      return nil
+    } else {
+      return s.left.Find(x)
+    }
+  } else if x > s.contents {
+    if s.right == nil {
+      return nil
+    } else {
+      return s.right.Find(x)
+    }
+  } else {
+    return s
+  }
 }
 
 func (s *Set) Height() int {
@@ -148,6 +174,10 @@ func (root *Set) rotate_right() (pivot *Set) {
 
   root.left = pivot.right
   pivot.right = root
+
+  root.left.parent = root
+  pivot.right.parent = pivot
+  pivot.parent = nil
   return
 }
 
@@ -160,6 +190,10 @@ func (root *Set) rotate_left() (pivot *Set) {
 
   root.right = pivot.left
   pivot.left = root
+
+  root.right.parent = root
+  pivot.left.parent = pivot
+  pivot.parent = nil
   return
 }
 

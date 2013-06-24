@@ -69,50 +69,46 @@ func TestBalance(t *testing.T) {
 }
 
 func TestRotateRight(t *testing.T) {
-  s            := NewSet(5)
+  s           := NewSet(5)
   s.left       = NewSet(3)
   s.left.left  = NewSet(2)
   s.left.right = NewSet(4)
   s.right      = NewSet(7)
 
+  s.left.parent       = s
+  s.left.left.parent  = s.left
+  s.left.right.parent = s.left
+  s.right.parent      = s
+
   s = s.rotate_right()
 
   if s.contents != 3 {
-    println("Rotate right failed.")
-    t.FailNow()
+    t.Error("Rotate right: contents of root node incorrect")
   }
   if satisfies_bst_property(s) != true {
-    println("Rotate right failed.")
-    t.FailNow()
+    t.Error("Rotate right: BST property not satisfied")
   }
 }
 
 func TestRotateLeft(t *testing.T) {
-  s := new(Set)
-  s.initialized = true
-  s.contents = 3
-  s.left = new(Set)
-  s.left.initialized = true
-  s.left.contents = 2
-  s.right = new(Set)
-  s.right.initialized = true
-  s.right.contents = 5
-  s.right.left = new(Set)
-  s.right.left.initialized = true
-  s.right.left.contents = 4
-  s.right.right = new(Set)
-  s.right.right.initialized = true
-  s.right.right.contents = 7
+  s            := NewSet(3)
+  s.left        = NewSet(2)
+  s.right       = NewSet(5)
+  s.right.left  = NewSet(4)
+  s.right.right = NewSet(7)
+
+  s.left.parent        = s
+  s.right.parent       = s
+  s.right.left.parent  = s.right
+  s.right.right.parent = s.right
 
   s = s.rotate_left()
 
   if s.contents != 5 {
-    println("Rotate left failed.")
-    t.FailNow()
+    t.Error("Rotate left: contents of root node incorrect")
   }
   if satisfies_bst_property(s) != true {
-    println("Rotate left failed.")
-    t.FailNow()
+    t.Error("Rotate left: BST property not satisfied")
   }
 }
 
@@ -124,6 +120,22 @@ func TestSize(t *testing.T) {
 
   if s.Size() != 3 {
     t.Errorf("Size is wrong. Expected %d, got %d", 3, s.Size())
+  }
+}
+
+func TestFind(t *testing.T) {
+  s := NewSet(1, 2, 3, 4, 5, 6, 7)
+
+  if s.Find(4) == nil {
+    t.Error("Find doesn't work.")
+  }
+}
+
+func TestTreeConsistency(t *testing.T) {
+  s := NewSet(1, 2, 3, 4, 5, 6, 7)
+
+  if s.Find(7).parent == nil || s.Find(7).parent.contents != 6 {
+    t.Error("Parentage not working.")
   }
 }
 
@@ -159,11 +171,19 @@ func satisfies_bst_property(s *Set) bool {
     } else if satisfies_bst_property(s.left) == false {
       return false
     }
+
+    if s.left.parent != s {
+      return false
+    }
   }
   if s.right != nil {
     if s.right.contents < s.contents {
       return false
     } else if satisfies_bst_property(s.right) == false {
+      return false
+    }
+
+    if s.right.parent != s {
       return false
     }
   }
