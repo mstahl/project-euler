@@ -8,7 +8,7 @@
 
 package set
 
-import "fmt"
+import "strconv"
 
 type Set struct {
   // Structural fields
@@ -21,7 +21,15 @@ type Set struct {
 
   // Metadata
   initialized bool
+  color uint16
 }
+
+// Constants ------------------------------------------------------------------
+
+const (
+  RED   = 0xDEAD
+  BLACK = 0xBEEF
+)
 
 // Constructors ---------------------------------------------------------------
 
@@ -36,27 +44,9 @@ func NewSet(x ...uint64) (new_set *Set) {
 // Public methods -------------------------------------------------------------
 
 func (s *Set) Add(n uint64) *Set {
-  if !s.initialized {
-    s.contents = n
-    s.initialized = true
-  } else {
-    if n < s.contents {
-      if s.left == nil {
-        s.left = NewSet(n)
-        s.left.parent = s
-      } else {
-        s.left.Add(n)
-      }
-    } else if n > s.contents {
-      if s.right == nil {
-        s.right = NewSet(n)
-        s.right.parent = s
-      } else {
-        s.right.Add(n)
-      }
-    }
-  }
-  return s
+  s = s.insert_and_return(n)
+
+  return balance(s).Root()
 }
 
 func (s *Set) Find(x uint64) *Set {
@@ -115,24 +105,12 @@ func (sp *Set) Includes(n uint64) bool {
   return false
 }
 
-func (s *Set) Print() {
-  if s == nil {
-    fmt.Print("nil")
-    return
-  }
-  fmt.Print("(")
-  if s.left == nil {
-    fmt.Print("nil")
+func (s *Set) Root() *Set {
+  if s.parent == nil {
+    return s
   } else {
-    s.left.Print()
+    return s.parent.Root()
   }
-  fmt.Print(",", s.contents, ",")
-  if s.right == nil {
-    fmt.Print("nil")
-  } else {
-    s.right.Print()
-  }
-  fmt.Print(")")
 }
 
 func (s *Set) Size() (my_size int) {
@@ -152,12 +130,16 @@ func (s *Set) String() (str string) {
   str += "("
   if s.left == nil {
     str += "nil"
+  } else if s.left.initialized == false {
+    str += "uninitialized"
   } else {
     str += s.left.String()
   }
-  str += "," + string(s.contents) + ","
+  str += "," + strconv.FormatUint(s.contents, 10) + ","
   if s.right == nil {
     str += "nil"
+  } else if s.right.initialized == false {
+    str += "uninitialized"
   } else {
     str += s.right.String()
   }
@@ -167,9 +149,103 @@ func (s *Set) String() (str string) {
 
 // Private methods -------------------------------------------------------------
 
-func (root *Set) balance() *Set {
-  fmt.Println("#balance not yet implemented.")
-  return new(Set)
+/*
+ * balance[1-5]()
+ *
+ * Operates on a node returned by #insert_and_return to crawl back up the tree
+ * towards the root, balancing and recolouring as it goes. This was lifted
+ * shamelessly from the wikipedia article on red-black trees.
+ */
+func balance(n *Set) *Set {
+  if n.parent == nil {
+    n.color = BLACK
+    return n
+  } else {
+    return balance2(n)
+  }
+}
+
+func balance2(n *Set) *Set {
+  if n.parent.color == BLACK {
+    return n
+  } else {
+    return balance3(n)
+  }
+}
+
+func balance3(n *Set) *Set {
+  u, g := n.uncle(), n.grandparent()
+
+  if u != nil && u.color == RED {
+    n.parent.color = BLACK
+    u.color = BLACK
+    g.color = RED
+    return balance(g)
+  } else {
+    return balance4(n)
+  }
+}
+
+func balance4(n *Set) *Set {
+  g := n.grandparent()
+
+  if n == n.parent.right && n.parent == g.left {
+    g.left = n.parent.rotate_left()
+    n = n.left
+  } else if n == n.parent.left && n.parent == g.right {
+    g.right = n.parent.rotate_right()
+    n = n.right
+  }
+  return balance5(n)
+}
+
+func balance5(n *Set) *Set {
+  g := n.grandparent()
+  n.parent.color = BLACK
+  g.color = RED
+  if n == n.parent.left {
+    return g.rotate_right()
+  } else {
+    return g.rotate_left()
+  }
+}
+
+func (root *Set) grandparent() *Set {
+  if root.parent != nil {
+    return root.parent.parent
+  } else {
+    return nil
+  }
+}
+
+/*
+ * insert_and_return(uint64)
+ *
+ * Inserts a node (if it doesn't already exist in the tree) and returns a
+ * reference to the node it just inserted.
+ */
+func (root *Set) insert_and_return(x uint64) *Set {
+  if root.initialized == false {
+    root.contents = x
+    root.initialized = true
+    return root
+  } else if x < root.contents {
+    if root.left == nil {
+      root.left = NewSet(x)
+      return root.left
+    } else {
+      return root.left.insert_and_return(x)
+    }
+  } else if x > root.contents {
+    if root.right == nil {
+      root.right = NewSet(x)
+      return root.right
+    } else {
+      return root.right.insert_and_return(x)
+    }
+  } else {
+    return root
+  }
 }
 
 func (root *Set) rotate_left() (pivot *Set) {
@@ -202,4 +278,16 @@ func (root *Set) rotate_right() (pivot *Set) {
   pivot.right.parent = pivot
   pivot.parent = nil
   return
+}
+
+func (root *Set) uncle() *Set {
+  g := root.grandparent()
+  if g == nil {
+    return nil
+  }
+  if root.parent == g.left {
+    return g.right
+  } else {
+    return g.left
+  }
 }

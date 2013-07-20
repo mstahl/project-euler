@@ -15,7 +15,7 @@ func TestAdd(t *testing.T) {
   if s.Includes(2) != true {
     t.Error("Set isn't storing second item.")
   }
-  if s.left.contents != 2 {
+  if s.left == nil || s.left.contents != 2 {
     t.Error("Set isn't storing 2 properly.")
   }
 
@@ -24,7 +24,7 @@ func TestAdd(t *testing.T) {
   if s.Includes(8) != true {
     t.Error("Set isn't storing third item.")
   }
-  if s.right.contents != 8 {
+  if s.right == nil || s.right.contents != 8 {
     t.Error("Set isn't storing 8 properly.")
   }
 
@@ -119,6 +119,16 @@ func TestSize(t *testing.T) {
   }
 }
 
+func TestString(t *testing.T) {
+  s      := NewSet(4)
+  s.left  = NewSet(3)
+  s.right = NewSet(5)
+
+  if str := s.String(); str != "((nil,3,nil),4,(nil,5,nil))" {
+    t.Errorf("String representation wrong. Expected '((nil,3,nil),4,(nil,5,nil))', got '%s'", str)
+  }
+}
+
 func TestFind(t *testing.T) {
   s := NewSet(1, 2, 3, 4, 5, 6, 7)
 
@@ -129,8 +139,14 @@ func TestFind(t *testing.T) {
 
 func TestTreeConsistency(t *testing.T) {
   s := NewSet(1, 2, 3, 4, 5, 6, 7)
+  println(s.String())
 
-  if s.Find(7).parent == nil || s.Find(7).parent.contents != 6 {
+  if s.Find(7).parent == nil {
+    t.Error("Parentage not working.")
+    t.FailNow()
+  }
+
+  if s.Find(7).parent.contents != 6 {
     t.Error("Parentage not working.")
   }
 }
