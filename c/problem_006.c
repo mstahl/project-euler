@@ -12,7 +12,7 @@
  * natural numbers and the square of the sum.
  */
 
-#include "euler.h"
+#include <euler.h>
 
 #define MAXIMUM 100
 

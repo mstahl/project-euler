@@ -1,7 +1,7 @@
-CFLAGS=-O3 -Wall
+CFLAGS=-O3 -Wall -I./include
 
-problem_% : problem_%.c euler.o
-	$(CC) $(CFLAGS) -o $@ $< euler.o
+problem_% : problem_%.c include/euler.o
+	$(CC) $(CFLAGS) -o $@ $< include/euler.o
 
 clean :
 	rm problem_???
