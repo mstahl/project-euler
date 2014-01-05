@@ -10,7 +10,7 @@
  * exceed four million, find the sum of the even-valued terms.
  */
 
-#include <stdio.h>
+#include <euler.h>
 
 int main(int argc, char * argv[]) {
   long f1, f2, f3, sum;
