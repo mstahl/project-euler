@@ -7,22 +7,23 @@
 #ifndef EULER_H
 #define EULER_H
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
 
-typedef unsigned long uint64;
+uint64_t gcd(uint64_t, uint64_t);
+uint64_t lcm(uint64_t, uint64_t);
 
-uint64 gcd(uint64 u, uint64 v);
-uint64 lcm(uint64 a, uint64 b);
+uint64_t isqrt(uint64_t);
 
-bool is_prime(uint64 x);
-bool is_palindrome(uint64 x);
+bool is_prime(uint64_t);
+bool is_palindrome(uint64_t);
 
-uint64 * sieve_to_n(uint64 n);
+uint64_t reverse_digits(uint64_t);
 
 /* Additional euler modules */
-#include <sieve.h>
+// #include <sieve.h>
 
 #endif

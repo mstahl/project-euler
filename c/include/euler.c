@@ -10,8 +10,8 @@
  * Pure numerical functions
  */
 // Shamelessly stolen from http://en.wikipedia.org/wiki/Binary_GCD_algorithm
-uint64 gcd(uint64 u, uint64 v) {
-  uint64 shift;
+uint64_t gcd(uint64_t u, uint64_t v) {
+  uint64_t shift;
 
   /* GCD(0,v) == v; GCD(u,0) == u, GCD(0,0) == 0 */
   if (u == 0) return v;
@@ -39,7 +39,7 @@ uint64 gcd(uint64 u, uint64 v) {
        swapping is just pointer movement, and the subtraction
        can be done in-place. */
     if (u > v) {
-      uint64 t = v; v = u; u = t;
+      uint64_t t = v; v = u; u = t;
     }  // Swap u and v.
     v = v - u;                       // Here v >= u.
   } while (v != 0);
@@ -48,36 +48,49 @@ uint64 gcd(uint64 u, uint64 v) {
   return u << shift;
 }
 
-uint64 lcm(uint64 a, uint64 b) {
-  /* return (a * b) / gcd(a, b); */
+uint64_t lcm(uint64_t a, uint64_t b) {
   return (a / gcd(a, b)) * b;
+}
+
+uint64_t isqrt(uint64_t n) {
+  uint64_t x0 = 0;
+  uint64_t x1 = n;
+
+  while(x1 - x0 > 1) {
+    x0 = x1;
+    x1 = (x0 + n / x0) / 2;
+  }
+  return x1;
 }
 
 /*
  * Quirks about numbers
  */
-bool is_palindrome(uint64 x) {
-  uint64 max_exp = floor(log10((double)x));
-  uint64 reversed = 0;
-
-  uint64 xx = x;
-  for(uint64 exp = max_exp; exp > 0; exp--) {
-    uint64 digit = xx % 10;
-    xx = xx / 10;
-    reversed = reversed * 10 + digit;
-  }
+bool is_palindrome(uint64_t x) {
+  uint64_t reversed = reverse_digits(x);
 
   return reversed == x;
+}
+
+uint64_t reverse_digits(uint64_t n) {
+  uint64_t result = 0;
+  while(n > 0) {
+    ldiv_t div_result = ldiv(n, 10);
+    result *= 10;
+    result += div_result.rem;
+    n = div_result.quot;
+  }
+  return result;
 }
 
 /*
  * Primality
  */
-bool is_prime(uint64 x) {
+bool is_prime(uint64_t x) {
   if(x == 1) { return false; }
   if((x & 1) == 0) { return false; }
 
-  for(uint64 d = 3; d < x / 2; d++) {
+  for(uint64_t d = 3; d < x / 2; d++) {
     if(x % d == 0) {
       return false;
     }
