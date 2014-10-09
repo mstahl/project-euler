@@ -22,5 +22,5 @@ func TestPrimesToLimit(t *testing.T) {
 }
 
 func BenchmarkPrimesToLimit(b *testing.B) {
-  _ = PrimesToLimit(1000000)
+  _ = PrimesToLimit(10000000)
 }
