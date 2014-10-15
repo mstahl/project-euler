@@ -1,3 +1,4 @@
+CC=c99
 CFLAGS=-O3 -Wall -I./include
 LIBS=-lgmp
 OBJS=include/euler.o \
