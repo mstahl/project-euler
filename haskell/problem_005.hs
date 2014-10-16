@@ -8,13 +8,12 @@
 
 module Main where
 
-import Control.Parallel
-import Control.Parallel.Strategies
+import ONeillPrimes
 
-divisible_by_all :: Integral t => t -> Bool
-divisible_by_all n = all (\r -> n `mod` r == 0) [2..20]
+best_power_below :: Integral t => t -> t -> t
+best_power_below max p = last $ takeWhile (<max) $ iterate (*p) 1
 
--- main :: IO ()
--- main = do print $ head $ filter (divisible_by_all) [20,40..]
+lcm_to_limit n = product $ map (best_power_below n) $ primesToLimit n
 
-main = do print $ head $ filter fst $ parBuffer 16 rseq $ map (\q -> (divisible_by_all q, q)) [20,40..]
+main :: IO ()
+main = do print $ lcm_to_limit 20
