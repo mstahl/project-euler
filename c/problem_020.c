@@ -28,7 +28,5 @@ int main(void) {
   mpz_t foo;
   mpz_init(foo);
   mpz_factorial_ui(foo, 100);
-  mpz_out_str(stdout, 10, foo);
-  printf("\n");
   printf("%lu\n", mpz_sum_of_digits(foo));
 }
