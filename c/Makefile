@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-O3 -Wall -I./include --std=c99
+CFLAGS=-O3 -Wall -I./include --std=c99 -g
 LIBS=-lgmp
 OBJS=include/euler.o \
 		 # include/sieve.o \
