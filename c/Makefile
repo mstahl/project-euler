@@ -12,7 +12,7 @@ test_sieve : test_sieve.c $(OBJS)
 	$(CC) $(CFLAGS) -o test_sieve $< $(OBJS)
 
 problem_% : problem_%.c $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $< $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $< $(OBJS) $(LIBS)
 
 clean :
 	rm -f problem_???

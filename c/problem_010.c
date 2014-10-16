@@ -44,7 +44,7 @@ int main(void) {
   for(int m = 0; m < MAX_PRIME; ++m) {
     sum += sieve[m];
   }
-  printf("%llu\n", sum);
+  printf("%lu\n", sum);
 
   free(sieve);
 }
