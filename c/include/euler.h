@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <gmp.h>
 
 //--[ Prime numbers and friends ]----------------------------------------------
 bool * sieve_primes(uint64_t);
@@ -25,5 +26,6 @@ uint64_t isqrt(uint64_t);
 //--[ Trivia ]-----------------------------------------------------------------
 bool is_palindrome(uint64_t);
 uint64_t reverse_digits(uint64_t);
+uint64_t mpz_sum_of_digits(mpz_t);
 
 #endif

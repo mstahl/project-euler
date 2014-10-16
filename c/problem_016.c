@@ -8,21 +8,7 @@
  * https://projecteuler.net/problem=16
  */
 
-#include <stdint.h>
-#include <stdio.h>
-#include <gmp.h>
-
-uint64_t mpz_sum_of_digits(mpz_t x) {
-  uint64_t sum = 0;
-  mpz_t remainder;
-
-  mpz_init(remainder);
-
-  while(mpz_cmp_ui(x,0) != 0) {
-    sum += mpz_tdiv_qr_ui(x, remainder, x, 10);
-  }
-  return sum;
-}
+#include <euler.h>
 
 int main(void) {
   mpz_t two;

@@ -154,3 +154,15 @@ bool is_prime(uint64_t x) {
   return true;
 }
 // TODO: This is a really inefficient way of doing this.
+
+uint64_t mpz_sum_of_digits(mpz_t x) {
+  uint64_t sum = 0;
+  mpz_t remainder;
+
+  mpz_init(remainder);
+
+  while(mpz_cmp_ui(x,0) != 0) {
+    sum += mpz_tdiv_qr_ui(x, remainder, x, 10);
+  }
+  return sum;
+}
