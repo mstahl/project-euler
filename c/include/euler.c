@@ -6,16 +6,13 @@
 
 #include "euler.h"
 
-// bool * sieve_primes(uint64_t)
-//
-// Supply a maximum integer value and this will return a Sieve of Eratosthenes
-// in the form of an array of maximum+1 boolean values. If the value at index i
-// is true, i is prime.
-bitfield_t * sieve_primes(uint64_t maximum) {
-  bitfield_t * primes = bitfield_create(maximum + 1);
+mpz_t * sieve_primes(uint64_t maximum) {
+  mpz_t * primes = (mpz_t*)malloc(sizeof(mpz_t));
 
-  bitfield_set(primes, 2);
-  bitfield_set(primes, 3);
+  mpz_init_set_ui(*primes, 0);
+
+  mpz_setbit(*primes, (mp_bitcnt_t)2);
+  mpz_setbit(*primes, (mp_bitcnt_t)3);
 
   uint64_t max_root = isqrt(maximum);
   uint64_t n;
@@ -24,64 +21,25 @@ bitfield_t * sieve_primes(uint64_t maximum) {
     for(uint64_t y = 1; y <= max_root; ++y) {
       uint64_t yy = y * y;
       n = 4*xx + yy;
-      if(n <= maximum && ((n % 12 == 1) || (n % 12 == 5))) bitfield_toggle(primes, n);
+      if(n <= maximum && ((n % 12 == 1) || (n % 12 == 5))) mpz_combit(*primes, n);
 
       n = 3*xx + yy;
-      if(n <= maximum && (n % 12 == 7)) bitfield_toggle(primes, n);
+      if(n <= maximum && (n % 12 == 7)) mpz_combit(*primes, n);
 
       n = 3*xx - yy;
-      if(x > y && n <= maximum && (n % 12 == 11)) bitfield_toggle(primes, n);
+      if(x > y && n <= maximum && (n % 12 == 11)) mpz_combit(*primes, n);
     }
   }
 
   for(n = 5; n <= max_root; n++) {
-    if(bitfield_query(primes, n)) {
+    if(mpz_tstbit(*primes, n)) {
       for(uint64_t k = 1; k * n*n <= maximum; k++) {
-        bitfield_clear(primes, k * n*n);
+        mpz_clrbit(*primes, k * n*n);
       }
     }
   }
   return primes;
 }
-/*
- * Old implementation
-bool * sieve_primes(uint64_t maximum) {
-  bool * primes = (bool *)calloc(maximum + 1, sizeof(bool));
-
-  // Initialize all the values to false
-  for(uint64_t i = 0; i < maximum; ++i) {
-    primes[i] = false;
-  }
-  primes[2] = true;
-  primes[3] = true;
-
-  uint64_t max_root = isqrt(maximum);
-  uint64_t n;
-  for(uint64_t x = 1; x <= max_root; ++x) {
-    uint64_t xx = x * x;
-    for(uint64_t y = 1; y <= max_root; ++y) {
-      uint64_t yy = y * y;
-      n = 4*xx + yy;
-      if(n <= maximum && ((n % 12 == 1) || (n % 12 == 5))) primes[n] = !primes[n];
-
-      n = 3*xx + yy;
-      if(n <= maximum && (n % 12 == 7)) primes[n] = !primes[n];
-
-      n = 3*xx - yy;
-      if(x > y && n <= maximum && (n % 12 == 11)) primes[n] = !primes[n];
-    }
-  }
-
-  for(n = 5; n <= max_root; n++) {
-    if(primes[n]) {
-      for(uint64_t k = 1; k * n*n <= maximum; k++) {
-        primes[k * n*n] = false;
-      }
-    }
-  }
-  return primes;
-}
-*/
 // Sieve of Atkins implementation borrowed from Wikipedia
 
 // uint64_t gcd(uint64_t, uint64_t)
@@ -191,7 +149,6 @@ bool is_prime(uint64_t x) {
 // TODO: This is a really inefficient way of doing this.
 
 uint64_t mpz_sum_of_digits(mpz_t x) {
-  /*
   uint64_t sum = 0;
   mpz_t remainder;
 
@@ -201,6 +158,4 @@ uint64_t mpz_sum_of_digits(mpz_t x) {
     sum += mpz_tdiv_qr_ui(x, remainder, x, 10);
   }
   return sum;
-  */
-  return 0;
 }
