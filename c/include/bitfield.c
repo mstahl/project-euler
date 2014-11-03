@@ -7,15 +7,13 @@
  */
 
 #include "bitfield.h"
-#include <stdio.h>
 
 //--[ Initializing bitfields ]-------------------------------------------------
 
-bitfield_t * bitfield_create(int size) {
+bitfield_t * bitfield_create(uint64_t size) {
   bitfield_t * bf = (bitfield_t *)malloc(sizeof(bitfield_t));
   bf->size_in_bits = size;
   bf->storage_size = size / BASE + 1;
-  printf("storage size = %d\n", (int)bf->storage_size);
   bf->storage = (uint64_t *)calloc(bf->storage_size, sizeof(uint64_t));
 
   for(uint64_t * p = bf->storage; p < bf->storage + bf->storage_size; ++p) {
@@ -27,20 +25,20 @@ bitfield_t * bitfield_create(int size) {
 
 //--[ Modifying bitfields ]----------------------------------------------------
 
-void bitfield_set(bitfield_t * bits, int index) {
+void bitfield_set(bitfield_t * bits, uint64_t index) {
   bits->storage[index / BASE] = bits->storage[index / BASE] | (1 << (index % BASE));
 }
 
-void bitfield_clear(bitfield_t * bits, int index) {
+void bitfield_clear(bitfield_t * bits, uint64_t index) {
   bits->storage[index / BASE] = bits->storage[index / BASE] & (~(1 << (index % BASE)));
 }
 
-void bitfield_toggle(bitfield_t * bits, int index) {
+void bitfield_toggle(bitfield_t * bits, uint64_t index) {
   bits->storage[index / BASE] = bits->storage[index / BASE] ^ (1 << (index % BASE));
 }
 
 void bitfield_set_all(bitfield_t * bits) {
-  for(int i = 0; i < bits->storage_size; ++i) {
+  for(uint64_t i = 0; i < bits->storage_size; ++i) {
     bits->storage[i] = ~0;
   }
 
@@ -51,14 +49,14 @@ void bitfield_set_all(bitfield_t * bits) {
 }
 
 void bitfield_clear_all(bitfield_t * bits) {
-  for(int i = 0; i < bits->storage_size; ++i) {
+  for(uint64_t i = 0; i < bits->storage_size; ++i) {
     bits->storage[i] = 0;
   }
 }
 
 //--[ Querying bitfields ]-----------------------------------------------------
 
-bool bitfield_query(bitfield_t * bits, int index) {
+bool bitfield_query(bitfield_t * bits, uint64_t index) {
   return (bits->storage[index / BASE] & (1 << (index % BASE))) != 0;
 }
 
@@ -84,30 +82,26 @@ void bitfield_destroy(bitfield_t * bits) {
 
 /******************************************************************************/
 
-int main(void) {
-  bitfield_t * bitz = bitfield_create(100);
-  bitfield_set(bitz, 17);
-  bitfield_set(bitz, 75);
-  bitfield_set(bitz, 90);
-
-  printf("count is %d\n", (int)bitfield_count(bitz));
-
-  bitfield_clear(bitz, 17);
-
-  for(int i = 0; i < 100; ++i) {
-    if(bitfield_query(bitz, i)) printf("%d: 1\n", i);
-    else printf("%d: 0\n", i);
-  }
-
-  printf("----\n");
-
-  bitfield_set_all(bitz);
-  printf("count is %d\n", (int)bitfield_count(bitz));
-  bitfield_clear_all(bitz);
-  printf("count is %d\n", (int)bitfield_count(bitz));
-
-
-  bitfield_destroy(bitz);
-
-  return 0;
-}
+// int main(void) {
+//   bitfield_t * bitz = bitfield_create(100);
+//   bitfield_set(bitz, 17);
+//   bitfield_set(bitz, 75);
+//   bitfield_set(bitz, 90);
+// 
+//   if(bitfield_query(bitz, 17)) printf("set\n");
+//   else printf("clear\n");
+// 
+//   bitfield_toggle(bitz, 17);
+// 
+//   if(bitfield_query(bitz, 17)) printf("set\n");
+//   else printf("clear\n");
+// 
+//   bitfield_toggle(bitz, 17);
+// 
+//   if(bitfield_query(bitz, 17)) printf("set\n");
+//   else printf("clear\n");
+// 
+//   bitfield_destroy(bitz);
+// 
+//   return 0;
+// }

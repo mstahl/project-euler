@@ -21,19 +21,19 @@ typedef struct bitfield bitfield_t;
 
 //--[ Initializing bitfields ]-------------------------------------------------
 
-bitfield_t * bitfield_create(int);
+bitfield_t * bitfield_create(uint64_t);
 
 //--[ Modifying bitfields ]----------------------------------------------------
 
-void bitfield_set(bitfield_t *, int);
-void bitfield_clear(bitfield_t *, int);
-void bitfield_toggle(bitfield_t *, int);
+void bitfield_set(bitfield_t *, uint64_t);
+void bitfield_clear(bitfield_t *, uint64_t);
+void bitfield_toggle(bitfield_t *, uint64_t);
 void bitfield_set_all(bitfield_t *);
 void bitfield_clear_all(bitfield_t *);
 
 //--[ Querying bitfields ]-----------------------------------------------------
 
-bool bitfield_query(bitfield_t *, int);
+bool bitfield_query(bitfield_t *, uint64_t);
 uint64_t bitfield_count(bitfield_t *);
 
 //--[ Destroying bitfields ]---------------------------------------------------

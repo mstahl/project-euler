@@ -1,9 +1,8 @@
 CC=gcc
-CFLAGS=-O3 -Wall -I./include --std=c99 -g
+CFLAGS=-O0 -Wall -I./include --std=c99 -g
 LIBS=-lgmp
 OBJS=include/euler.o \
-		 # include/sieve.o \
-		 # include/bitfield.o
+		 include/bitfield.o
 
 test : test.c $(OBJS)
 	$(CC) $(CFLAGS) -o test $< $(OBJS)

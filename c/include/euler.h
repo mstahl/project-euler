@@ -14,8 +14,10 @@
 #include <math.h>
 #include <gmp.h>
 
+#include "bitfield.h"
+
 //--[ Prime numbers and friends ]----------------------------------------------
-bool * sieve_primes(uint64_t);
+bitfield_t * sieve_primes(uint64_t);
 bool is_prime(uint64_t);
 
 //--[ Useful numerical functions ]---------------------------------------------
