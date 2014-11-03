@@ -67,7 +67,9 @@ int main(void) {
       sum += j;
     }
   }
-  printf("%llu\n", sum);
+  printf("%lu\n", sum);
 
   return 0;
 }
+
+// Answer: 31626
