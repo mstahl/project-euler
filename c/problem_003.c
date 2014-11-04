@@ -14,10 +14,10 @@ const uint64_t n = 600851475143;
 /* const uint64_t n = 13195; */
 
 uint64_t largest_prime_factor(uint64_t x) {
-  bitfield_t * prime_sieve = sieve_primes(x);
+  mpz_t * prime_sieve = sieve_primes(x);
 
   for(uint64_t i = x; i >= 2; --i) {
-    if(!bitfield_query(prime_sieve, i)) continue;
+    if(!mpz_tstbit(*prime_sieve, i)) continue;
 
     if(x % i == 0) return i;
   }

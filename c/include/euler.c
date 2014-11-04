@@ -107,6 +107,15 @@ uint64_t isqrt(uint64_t n) {
   return x1;
 }
 
+// uint64_t sigma(uint64_t, uint64_t)
+//
+// Returns the value of the sigma (sum of divisors) function, with the given
+// subscript. The subscript is the exponent each divisor is raised to in the
+// sum. Use 0 for this value to merely get a count of divisors.
+uint64_t sigma(uint64_t subscript, uint64_t n) {
+  return 0; // WIP
+}
+
 // bool is_palindrome(uint64_t)
 //
 // Returns true if the given 64-bit unsigned integer has the same value when

@@ -17,6 +17,8 @@
  * Which starting number, under one million, produces the longest chain?
  *
  * NOTE: Once the chain starts the terms are allowed to go above one million.
+ *
+ * https://projecteuler.net/problem=14
  */
 
 #include <euler.h>
@@ -44,5 +46,7 @@ int main(void) {
       longest_length = i_length;
     }
   }
-  printf("Collatz sequence length for %lu :=> %lu\n", longest_start, longest_length);
+  printf("%lu", longest_start);
 }
+
+// Answer: 837799

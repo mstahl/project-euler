@@ -14,6 +14,8 @@
 #include <math.h>
 #include <gmp.h>
 
+#include <prime_factorization.h>
+
 //--[ Prime numbers and friends ]----------------------------------------------
 mpz_t * sieve_primes(uint64_t);
 bool is_prime(uint64_t);
@@ -22,6 +24,8 @@ bool is_prime(uint64_t);
 uint64_t gcd(uint64_t, uint64_t);
 uint64_t lcm(uint64_t, uint64_t);
 uint64_t isqrt(uint64_t);
+
+uint64_t sigma(uint64_t, uint64_t);
 
 //--[ Trivia ]-----------------------------------------------------------------
 bool is_palindrome(uint64_t);
