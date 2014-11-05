@@ -2,11 +2,11 @@ CC=gcc
 CFLAGS=-O0 -Wall -I./include --std=c99 -g
 LIBS=-lgmp
 OBJS=include/euler.o \
+		 include/prime_factorization.o \
 		 # include/bitfield.o \
-		 # include/prime_factorization.o
 
 test : test.c $(OBJS)
-	$(CC) $(CFLAGS) -o test $< $(OBJS)
+	$(CC) $(CFLAGS) -o test $< $(OBJS) $(LIBS)
 
 test_sieve : test_sieve.c $(OBJS)
 	$(CC) $(CFLAGS) -o test_sieve $< $(OBJS)
