@@ -30,3 +30,5 @@ int main(void) {
   mpz_factorial_ui(foo, 100);
   printf("%lu\n", mpz_sum_of_digits(foo));
 }
+
+// Answer: 648
