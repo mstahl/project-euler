@@ -42,6 +42,14 @@ mpz_t * sieve_primes(uint64_t maximum) {
 }
 // Sieve of Atkins implementation borrowed from Wikipedia
 
+uint64_t factorial_ui(uint64_t n) {
+  uint64_t result = 1;
+
+  for(uint64_t x = 2; x <= n; ++x) result *= x;
+
+  return result;
+}
+
 // uint64_t gcd(uint64_t, uint64_t)
 //
 // Returns the Greatest Common Divisor of the two given 64-bit unsigned
@@ -168,3 +176,11 @@ uint64_t mpz_sum_of_digits(mpz_t x) {
   }
   return sum;
 }
+
+//--[ String functions ]-------------------------------------------------------
+
+/* char ** string_permutations(char * string) {                                      */
+/*   size_t length = strlen(string);                                                 */
+/*   size_t number_of_permutations = (size_t)factorial(length);                      */
+/*   char ** permutations = (char **)calloc(number_of_permutations, sizeof(char *)); */
+/* }                                                                                 */

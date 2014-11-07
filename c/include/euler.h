@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <gmp.h>
+#include <string.h>
 
 #include <prime_factorization.h>
 
@@ -21,6 +22,7 @@ mpz_t * sieve_primes(uint64_t);
 bool is_prime(uint64_t);
 
 //--[ Useful numerical functions ]---------------------------------------------
+uint64_t factorial_ui(uint64_t);
 uint64_t gcd(uint64_t, uint64_t);
 uint64_t lcm(uint64_t, uint64_t);
 uint64_t isqrt(uint64_t);
@@ -31,5 +33,8 @@ uint64_t sigma(uint64_t, uint64_t);
 bool is_palindrome(uint64_t);
 uint64_t reverse_digits(uint64_t);
 uint64_t mpz_sum_of_digits(mpz_t);
+
+//--[ String functions ]-------------------------------------------------------
+// char ** string_permutations(char *);
 
 #endif

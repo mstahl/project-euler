@@ -1,9 +1,9 @@
 CC=gcc
-CFLAGS=-O0 -Wall -I./include --std=c99 -g
+CFLAGS=-O3 -Wall -I./include --std=c99
+# CFLAGS=-O0 -Wall -I./include --std=c99 -g
 LIBS=-lgmp
 OBJS=include/euler.o \
-		 include/prime_factorization.o \
-		 # include/bitfield.o \
+		 include/prime_factorization.o
 
 test : test.c $(OBJS)
 	$(CC) $(CFLAGS) -o test $< $(OBJS) $(LIBS)
