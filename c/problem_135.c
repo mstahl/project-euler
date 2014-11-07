@@ -21,13 +21,6 @@
 
 #define MAX 1000000
 
-uint64_t number_of_solutions(uint64_t n) {
-  uint64_t solutions_found = 0;
-
-
-  return solutions_found;
-}
-
 int main(void) {
   uint64_t * solution_counts = (uint64_t *)calloc(MAX + 1, sizeof(uint64_t));
 
