@@ -165,6 +165,12 @@ bool is_prime(uint64_t x) {
 }
 // TODO: This is a really inefficient way of doing this.
 
+bool is_perfect_square(uint64_t x) {
+  uint64_t s = isqrt(x);
+
+  return s * s == x;
+}
+
 uint64_t mpz_sum_of_digits(mpz_t x) {
   uint64_t sum = 0;
   mpz_t remainder;

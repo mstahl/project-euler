@@ -19,7 +19,6 @@
  */
 
 #include <euler.h>
-#include <string.h>
 
 uint64_t sum_square_digits(uint64_t x) {
   uint64_t sum = 0;

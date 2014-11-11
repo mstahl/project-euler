@@ -33,6 +33,7 @@ uint64_t sigma(uint64_t, uint64_t);
 bool is_palindrome(uint64_t);
 uint64_t reverse_digits(uint64_t);
 uint64_t mpz_sum_of_digits(mpz_t);
+bool is_perfect_square(uint64_t);
 
 //--[ String functions ]-------------------------------------------------------
 // char ** string_permutations(char *);
