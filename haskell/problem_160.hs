@@ -13,11 +13,16 @@
 
 module Main where
 
-trim0s n | n < 10 = n
-         | n `mod` 10 == 0 = trim0s $ n `div` 10
-         | otherwise = n
+trim0s :: (Integral t) => t -> t
+trim0s n = head $ filter (\x -> x `mod` 10 /= 0)
+                $ iterate (\x -> x `div` 10) n
 
+last_5_digits :: (Integral t) => t -> t
+last_5_digits n = n `mod` 100000
+
+f :: (Integral t) => t -> t
+f 1 = 1
+f x = foldl1 (\factorial i -> last_5_digits $ trim0s $ factorial * i) [1..x]
 
 main :: IO ()
-main = do print $ f $ 10^12
-
+main = do print $ f (10^6)
