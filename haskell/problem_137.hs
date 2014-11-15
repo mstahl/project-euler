@@ -1,10 +1,11 @@
 module Main where
 
-import Data.Ratio
+fibonaccis = 1 : 2 : zipWith (+) fibonaccis (tail fibonaccis)
 
-fibonaccis = 1 : 1 : zipWith (+) fibonaccis (tail fibonaccis)
+in_pairs :: [t] -> [(t, t)]
+in_pairs (x:y:xs) = (x, y) : in_pairs xs
 
-rationals :: [Ratio Int]
-rationals = do denominator <- [2..]
-               numerator <- [1..(denominator - 1)]
-               [numerator % denominator]
+golden_nuggets = map (\(x, y) -> x * y) $ in_pairs fibonaccis
+
+main :: IO ()
+main = do print $ golden_nuggets !! 15
