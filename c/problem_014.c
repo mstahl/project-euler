@@ -17,11 +17,13 @@
  * Which starting number, under one million, produces the longest chain?
  *
  * NOTE: Once the chain starts the terms are allowed to go above one million.
+ *
+ * https://projecteuler.net/problem=14
  */
 
 #include <euler.h>
 
-uint64 collatz_length(uint64 n) {
+uint64_t collatz_length(uint64_t n) {
   if(n == 1) {
     return 1;
   }
@@ -34,15 +36,17 @@ uint64 collatz_length(uint64 n) {
 }
 
 int main(void) {
-  uint64 longest_length = 0;
-  uint64 longest_start  = 0;
+  uint64_t longest_length = 0;
+  uint64_t longest_start  = 0;
 
-  for(uint64 i = 1; i < 1000000; ++i) {
-    uint64 i_length = collatz_length(i);
+  for(uint64_t i = 1; i < 1000000; ++i) {
+    uint64_t i_length = collatz_length(i);
     if(i_length > longest_length) {
       longest_start = i;
       longest_length = i_length;
     }
   }
-  printf("Collatz sequence length for %lu :=> %lu\n", longest_start, longest_length);
+  printf("%lu", longest_start);
 }
+
+// Answer: 837799

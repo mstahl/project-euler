@@ -1,5 +1,0 @@
-#!/bin/bash
-
-rm -f *.hi
-rm -f *.o
-rm -f problem_???

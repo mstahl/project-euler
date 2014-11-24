@@ -22,8 +22,7 @@ f = sum . map (^5) . digits
 
 test n = f n == n
 
-valid n = let ds = digits n
-              dl = length ds
+valid n = let dl = length $ digits n
           in n < (9 ^ 5) * dl
 
 main :: IO ()
