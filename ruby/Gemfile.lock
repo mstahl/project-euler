@@ -1,9 +1,14 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    ansi (1.5.0)
     coderay (1.1.0)
     diff-lcs (1.2.5)
+    hashie (3.4.1)
     method_source (0.8.2)
+    powerbar (1.0.12)
+      ansi (~> 1.5.0)
+      hashie (>= 1.1.0)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -27,5 +32,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  powerbar
   pry
   rspec
